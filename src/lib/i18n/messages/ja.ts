@@ -49,7 +49,9 @@ const ja: Messages = {
 
 	layers: {
 		title: 'レイヤー',
+		shinkansen: '新幹線',
 		railway: '鉄道',
+		tram: '路面電車・モノレール',
 		bus: 'バスルート',
 		station: '鉄道駅',
 		busstop: 'バス停',
@@ -60,7 +62,9 @@ const ja: Messages = {
 
 	legend: {
 		title: 'ICカードの対応状況',
+		shinkansenLine: '新幹線',
 		railwayLine: '鉄道',
+		tramLine: '路面電車・モノレール',
 		busLine: 'バスルート',
 		railwayStation: '鉄道駅',
 		busStop: 'バス停',
@@ -136,7 +140,7 @@ const ja: Messages = {
 			'日本にはSuica・PASMO・ICOCA・TOICA・manaca・PiTaPa・Kitaca・SUGOCA・nimoca・はやかけんの10種類の交通系ICカードがあり、2013年から相互に利用できます。つまりどれか1枚に対応している鉄道・バスなら、手持ちのSuicaでも乗れます。この地図は、それがどこなのかを示すものです。',
 		howToRead: '地図の読み方',
 		howToReadBody:
-			'緑はSuicaがそのまま使える路線です。黄色は特定のICエリア内や一部区間でのみ使える事業者で、JRの長距離路線はエリアを出たり入ったりするため、ポップアップの備考を確認してください。赤はIC乗車券に非対応です。グレーは対応状況を確認できなかった事業者で、「利用不可」という意味ではありません。',
+			'対応状況は路線の縁取りの色で表しています（線そのものの色は種別を表し、新幹線が青、それ以外は黒です）。緑はSuicaがそのまま使える路線です。黄色は特定のICエリア内や一部区間でのみ使える事業者で、JRの長距離路線はエリアを出たり入ったりするため、ポップアップの備考を確認してください。赤はIC乗車券に非対応です。グレーは対応状況を確認できなかった事業者で、「利用不可」という意味ではありません。',
 		dataSources: 'データの出典',
 		icSource: 'ICカード対応状況',
 		icSourceBody:

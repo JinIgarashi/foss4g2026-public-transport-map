@@ -2,7 +2,13 @@ import { SvelteSet } from 'svelte/reactivity';
 import type { FilterSpecification } from 'maplibre-gl';
 import { STATUS, STATUS_KEYS, type StatusKey } from './status';
 
-export type LayerKey = 'railway' | 'bus' | 'station' | 'busstop';
+/**
+ * The rail kinds are separate keys rather than one `railway`, because a visitor
+ * looking for local transit wants the shinkansen out of the way and vice versa.
+ * They match `RailKindKey` in `railway.ts`, which owns the filter that decides
+ * which line is which.
+ */
+export type LayerKey = 'shinkansen' | 'railway' | 'tram' | 'bus' | 'station' | 'busstop';
 
 /** Protomaps basemap flavours offered by the style switcher. */
 export type BasemapKey = 'white' | 'light' | 'dark';
@@ -14,7 +20,9 @@ export type BasemapKey = 'white' | 'light' | 'dark';
  */
 class MapView {
 	#layers = $state<Record<LayerKey, boolean>>({
+		shinkansen: true,
 		railway: true,
+		tram: true,
 		bus: true,
 		station: true,
 		busstop: true

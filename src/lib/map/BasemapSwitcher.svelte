@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { IControl } from 'maplibre-gl';
 	import { CustomControl, getMapContext } from 'svelte-maplibre-gl';
-	import { base } from '$app/paths';
+	import { asset } from '$app/paths';
 	import { mapView, type BasemapKey } from './view.svelte';
 
 	const BASEMAPS: { key: BasemapKey; title: string }[] = [
@@ -69,7 +69,7 @@
 					// the plugin's type requires it, and the real URL documents what
 					// the thumbnail is showing.
 					uri: `https://api.protomaps.com/styles/v5/${key}/en.json`,
-					image: `${base}/style-switcher/${key}.webp`
+					image: asset(`/style-switcher/${key}.webp`)
 				})),
 				{ defaultStyle: BASEMAPS.find(({ key }) => key === mapView.basemap)?.title }
 			) as unknown as IControl;

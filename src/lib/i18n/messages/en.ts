@@ -49,7 +49,9 @@ const en = {
 
 	layers: {
 		title: 'Layers',
+		shinkansen: 'Shinkansen',
 		railway: 'Railways',
+		tram: 'Trams and monorails',
 		bus: 'Bus routes',
 		station: 'Railway stations',
 		busstop: 'Bus stops',
@@ -60,7 +62,9 @@ const en = {
 
 	legend: {
 		title: 'IC card acceptance',
+		shinkansenLine: 'Shinkansen',
 		railwayLine: 'Railway',
+		tramLine: 'Tram or monorail',
 		busLine: 'Bus route',
 		railwayStation: 'Railway station',
 		busStop: 'Bus stop',
@@ -136,7 +140,7 @@ const en = {
 			'Japan has ten transit IC cards — Suica, PASMO, ICOCA, TOICA, manaca, PiTaPa, Kitaca, SUGOCA, nimoca and Hayakaken — and since 2013 they are mutually usable. If a railway or bus accepts any of them, your Suica works there too. This map shows where that is, and where it is not.',
 		howToRead: 'How to read it',
 		howToReadBody:
-			'Green means your Suica works. Amber means the operator only accepts IC cards inside certain areas or on certain sections — long JR lines run in and out of coverage, so read the note in the popup. Red means no IC ticketing at all. Grey means we could not confirm the operator; that is not the same as "not accepted".',
+			'Acceptance is the colour of the outline around each route; the route itself is coloured by what it is, blue for the shinkansen and dark for everything else. Green means your Suica works. Amber means the operator only accepts IC cards inside certain areas or on certain sections — long JR lines run in and out of coverage, so read the note in the popup. Red means no IC ticketing at all. Grey means we could not confirm the operator; that is not the same as "not accepted".',
 		dataSources: 'Data sources',
 		icSource: 'IC card acceptance',
 		icSourceBody:

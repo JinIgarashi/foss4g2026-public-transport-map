@@ -1,7 +1,7 @@
 import type { AddProtocolAction } from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { browser } from '$app/environment';
-import { base } from '$app/paths';
+import { asset } from '$app/paths';
 
 /**
  * Handler for the `pmtiles://` scheme, mounted through
@@ -17,6 +17,6 @@ export const pmtilesProtocol: AddProtocolAction = new Protocol().tile;
  * which breaks under the repository subpath the site is published on.
  */
 export function tilesUrl(name: string): string {
-	const path = `${base}/tiles/${name}.pmtiles`;
+	const path = asset(`/tiles/${name}.pmtiles`);
 	return `pmtiles://${browser ? new URL(path, location.href).href : path}`;
 }

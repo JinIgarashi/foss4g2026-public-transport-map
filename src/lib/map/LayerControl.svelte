@@ -18,7 +18,7 @@
 	// useful, and the legend already explains the colours.
 	let expanded = $state(true);
 
-	const layers: LayerKey[] = ['railway', 'bus', 'station', 'busstop'];
+	const layers: LayerKey[] = ['shinkansen', 'railway', 'tram', 'bus', 'station', 'busstop'];
 </script>
 
 <!-- `group={false}`: the default `maplibregl-ctrl-group` styling is built for

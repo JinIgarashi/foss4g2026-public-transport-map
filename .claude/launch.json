@@ -14,6 +14,19 @@
 			"runtimeArgs": ["preview", "--port", "4173"],
 			"port": 4173,
 			"autoPort": false
+		},
+		{
+			"name": "preview-base",
+			"runtimeExecutable": "env",
+			"runtimeArgs": [
+				"BASE_PATH=/foss4g2026-public-transport-map",
+				"pnpm",
+				"preview",
+				"--port",
+				"4174"
+			],
+			"port": 4174,
+			"autoPort": false
 		}
 	]
 }

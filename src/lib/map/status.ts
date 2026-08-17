@@ -23,11 +23,14 @@ export const STATUS_BY_CODE: Record<number, StatusKey> = Object.fromEntries(
 ) as Record<number, StatusKey>;
 
 /**
- * Line colours. Chosen to stay apart for the most common colour-vision
+ * Acceptance colours. Chosen to stay apart for the most common colour-vision
  * deficiencies — green vs amber vs red alone would not — by pairing hue with a
  * clear lightness ramp, and to hold up on every Protomaps flavour the style
- * switcher offers, White through Dark. The casings and halos around them do
- * flip with the basemap; see `paper` and `ink` in `MapView.svelte`.
+ * switcher offers, White through Dark.
+ *
+ * These paint the *casing* under each route rather than the route itself: the
+ * line on top carries the mode in a fixed colour (see `LINE_COLOR`), and the
+ * acceptance colour reads as an outline around it.
  */
 export const STATUS_COLOR: Record<StatusKey, string> = {
 	full: '#0f9d58',
@@ -45,6 +48,21 @@ export const STATUS_COLOR: Record<StatusKey, string> = {
  * status filter still applies, so a stop hidden by the filter disappears.
  */
 export const BUS_STOP_COLOR = '#1a73e8';
+
+/**
+ * The colour of the route itself, which says what kind of transit it is and
+ * nothing about IC cards: dark for railways, trams and buses, blue for the
+ * shinkansen. Station rings take `LINE_COLOR` too, so a station reads as
+ * belonging to the line it sits on.
+ *
+ * Each has a light counterpart for the Dark basemap flavour, where a near-black
+ * line would vanish into the ground. `MapView.svelte` picks between them the
+ * same way it picks `paper` and `ink`.
+ */
+export const LINE_COLOR = '#3c4043';
+export const LINE_COLOR_DARK = '#e8eaed';
+export const SHINKANSEN_COLOR = '#1967d2';
+export const SHINKANSEN_COLOR_DARK = '#8ab4f8';
 
 /** `["match", ["get","st"], 0, colour, …]` for a paint property. */
 export function statusColorExpression(): ExpressionSpecification {

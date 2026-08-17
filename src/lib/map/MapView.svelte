@@ -29,7 +29,15 @@
 	import { pmtilesProtocol, tilesUrl } from './pmtiles';
 	import { mapView } from './view.svelte';
 	import { operatorBounds } from './operators';
-	import { BUS_STOP_COLOR, statusColorExpression } from './status';
+	import {
+		BUS_STOP_COLOR,
+		LINE_COLOR,
+		LINE_COLOR_DARK,
+		SHINKANSEN_COLOR,
+		SHINKANSEN_COLOR_DARK,
+		statusColorExpression
+	} from './status';
+	import { railKindFilter } from './railway';
 	import AboutDialog from '$lib/AboutDialog.svelte';
 	import BasemapSwitcher from './BasemapSwitcher.svelte';
 	import FeaturePopup, { type FeatureInfo } from './FeaturePopup.svelte';
@@ -59,11 +67,11 @@
 	const statusColor = statusColorExpression();
 
 	/**
-	 * One dot size for stations and bus stops both. They are the same kind of
-	 * thing to a traveller, so sizing them differently would say something the
-	 * map does not mean — and the legend draws them at one size too.
+	 * Bus stops keep the smaller of the two dot sizes. They are the denser
+	 * layer by far, and at z13 upwards there are enough of them on screen that
+	 * a larger dot would close the gaps between them.
 	 */
-	const STOP_RADIUS: DataDrivenPropertyValueSpecification<number> = [
+	const BUSSTOP_RADIUS: DataDrivenPropertyValueSpecification<number> = [
 		'interpolate',
 		['linear'],
 		['zoom'],
@@ -75,15 +83,42 @@
 		5
 	];
 
+	/**
+	 * Stations are drawn a size and a half larger than bus stops: they are what
+	 * a visitor navigates by, they come in at z9 where the map is still coarse,
+	 * and at the old size they were easy to lose against the line they sit on.
+	 * The legend follows the same size relation.
+	 */
+	const STATION_RADIUS: DataDrivenPropertyValueSpecification<number> = [
+		'interpolate',
+		['linear'],
+		['zoom'],
+		9,
+		3.5,
+		12,
+		5.5,
+		15,
+		7.5
+	];
+
 	/** Ink that has to stay legible against the basemap, not against the theme. */
 	let paper = $derived(mapView.isDarkBasemap ? '#0b1120' : '#ffffff');
 	let ink = $derived(mapView.isDarkBasemap ? '#e8eaed' : '#1f2328');
+	/** The route colours, which flip with the basemap for the same reason. */
+	let lineColor = $derived(mapView.isDarkBasemap ? LINE_COLOR_DARK : LINE_COLOR);
+	let shinkansenColor = $derived(mapView.isDarkBasemap ? SHINKANSEN_COLOR_DARK : SHINKANSEN_COLOR);
 
 	let busVisibility = $derived<VisibilitySpecification>(
 		mapView.isVisible('bus') ? 'visible' : 'none'
 	);
+	let shinkansenVisibility = $derived<VisibilitySpecification>(
+		mapView.isVisible('shinkansen') ? 'visible' : 'none'
+	);
 	let railwayVisibility = $derived<VisibilitySpecification>(
 		mapView.isVisible('railway') ? 'visible' : 'none'
+	);
+	let tramVisibility = $derived<VisibilitySpecification>(
+		mapView.isVisible('tram') ? 'visible' : 'none'
 	);
 	let stationVisibility = $derived<VisibilitySpecification>(
 		mapView.isVisible('station') ? 'visible' : 'none'
@@ -102,8 +137,19 @@
 		locale === 'en' ? ['coalesce', ['get', 'ne'], ['get', 'nm']] : ['get', 'nm']
 	);
 
-	/** Layers a click can open a popup for, innermost first. */
-	const CLICKABLE = ['station-dot', 'busstop-dot', 'railway-line', 'bus-line'];
+	/**
+	 * Layers a click can open a popup for, innermost first. Each rail group is
+	 * represented by its casing, the widest layer of the three and so the easiest
+	 * to hit — the hatch drawn on top of it has gaps a click could fall through.
+	 */
+	const CLICKABLE = [
+		'station-dot',
+		'busstop-dot',
+		'shinkansen-casing',
+		'railway-casing',
+		'tram-casing',
+		'bus-casing'
+	];
 
 	/**
 	 * The line under the cursor, identified by attributes rather than by feature
@@ -152,42 +198,62 @@
 		] as unknown as never;
 	}
 
+	type WidthStops = [zoom: number, base: number, wide: number][];
+
+	/**
+	 * Route widths. The lines themselves never change width — not with hover,
+	 * only with zoom — so their `wide` column repeats the base; what widens is
+	 * the casing under them.
+	 */
+	const RAIL_LINE: WidthStops = [
+		[5, 2, 2],
+		[10, 4.5, 4.5],
+		[14, 8, 8]
+	];
+	const TRAM_LINE: WidthStops = [
+		[5, 1, 1],
+		[10, 2.5, 2.5],
+		[14, 5, 5]
+	];
+	const BUS_LINE: WidthStops = [
+		[6, 1, 1],
+		[10, 2.2, 2.2],
+		[14, 4.5, 4.5]
+	];
+
+	const scale = (stops: WidthStops, factor: number): WidthStops =>
+		stops.map(([zoom, base, wide]) => [zoom, base * factor, wide * factor]);
+
+	/**
+	 * The acceptance-coloured casing: 1px of colour down each side of the route,
+	 * and 3px when the route is hovered. Since the line on top keeps its width,
+	 * that growing rim is the whole of the hover highlight — at 2px it was too
+	 * small a change to notice against a 1px rim.
+	 */
+	const casing = (stops: WidthStops): WidthStops =>
+		stops.map(([zoom, base]) => [zoom, base + 2, base + 6]);
+
 	// Bus routes are dissolved per operator name, so `nm` + `op` is the route.
-	let busWidth = $derived(
-		hoverWidth(
-			hoveredBus,
-			['nm', 'op'],
-			[
-				[6, 1, 2.5],
-				[10, 2.2, 5],
-				[14, 4.5, 10]
-			]
-		)
-	);
+	let busKeys: ('nm' | 'op')[] = ['nm', 'op'];
 	// Railways are split per section, so company + line name is the line.
-	let railwayWidth = $derived(
-		hoverWidth(
-			hoveredRailway,
-			['nm', 'ln'],
-			[
-				[5, 1, 2.5],
-				[10, 2.5, 6],
-				[14, 5, 11]
-			]
-		)
+	let railKeys: ('nm' | 'ln')[] = ['nm', 'ln'];
+
+	const busWidth = hoverWidth(null, busKeys, BUS_LINE);
+	let busCasingWidth = $derived(hoverWidth(hoveredBus, busKeys, casing(BUS_LINE)));
+
+	// A shinkansen is drawn wider than the line it runs beside. The hatch is a
+	// multiple of the line width, so widening it does not change the pattern.
+	const SHINKANSEN_LINE = scale(RAIL_LINE, 1.35);
+	const shinkansenWidth = hoverWidth(null, railKeys, SHINKANSEN_LINE);
+	let shinkansenCasingWidth = $derived(
+		hoverWidth(hoveredRailway, railKeys, casing(SHINKANSEN_LINE))
 	);
-	// The white casing widens with it, or the halo would vanish under the line.
-	let railwayCasingWidth = $derived(
-		hoverWidth(
-			hoveredRailway,
-			['nm', 'ln'],
-			[
-				[5, 2, 4],
-				[10, 4.5, 9],
-				[14, 8, 16]
-			]
-		)
-	);
+
+	const railwayWidth = hoverWidth(null, railKeys, RAIL_LINE);
+	let railwayCasingWidth = $derived(hoverWidth(hoveredRailway, railKeys, casing(RAIL_LINE)));
+
+	const tramWidth = hoverWidth(null, railKeys, TRAM_LINE);
+	let tramCasingWidth = $derived(hoverWidth(hoveredRailway, railKeys, casing(TRAM_LINE)));
 
 	/**
 	 * Filtering to a set of operators is useless if they are off-screen, so move
@@ -242,22 +308,30 @@
 	<Protocol scheme="pmtiles" loadFn={pmtilesProtocol} />
 	<Hash />
 
-	<AttributionControl
-		position="bottom-right"
-		compact
-		customAttribution={`<a href="https://nlftp.mlit.go.jp/ksj/" target="_blank" rel="noopener noreferrer">${t.map.attribution}</a> (CC BY 4.0)`}
-	/>
 	<!-- MapLibre *prepends* into the bottom corners, so the reading order down the
 	     screen is the reverse of the order here: bottom-right ends up geolocate,
-	     zoom, about, attribution, and bottom-left legend, basemap picker, scale.
+	     zoom, attribution, and bottom-left legend, basemap picker, scale.
 
-	     The About dialog lives on the map rather than in the header because what
+	     Keyed on the locale because the attribution text is localised, and
+	     `AttributionControl` answers a changed `customAttribution` by removing and
+	     re-adding its control — which, with prepending, lands it above everything
+	     else in the corner. Rebuilding the whole corner together is what puts it
+	     back at the bottom where it belongs; re-adding it alone cannot. -->
+	{#key locale}
+		<AttributionControl
+			position="bottom-right"
+			compact
+			customAttribution={`<a href="https://nlftp.mlit.go.jp/ksj/" target="_blank" rel="noopener noreferrer">${t.map.attribution}</a> (CC BY 4.0)`}
+		/>
+		<NavigationControl position="bottom-right" showCompass={true} />
+		<GeolocateControl position="bottom-right" />
+	{/key}
+
+	<!-- The About dialog lives on the map rather than in the header because what
 	     it explains, the line colours, is a question the map itself raises. -->
-	<CustomControl position="bottom-right" group={false}>
+	<CustomControl position="top-right" group={false}>
 		<AboutDialog />
 	</CustomControl>
-	<NavigationControl position="bottom-right" showCompass={false} />
-	<GeolocateControl position="bottom-right" />
 
 	<ScaleControl position="bottom-left" maxWidth={120} unit="metric" />
 	<BasemapSwitcher />
@@ -265,11 +339,22 @@
 
 	<!-- Buses first so railways draw over them: a rail line is the thing a
 	     visitor is most likely to be looking for, and bus routes are dense
-	     enough to bury it otherwise. -->
+	     enough to bury it otherwise.
+
+	     They only start at z10, the zoom a bus route is a route rather than a
+	     smear. Each mode comes in at the scale it means something on — the
+	     shinkansen at z4, railways at z6, trams and buses at z10 — because
+	     drawing all of them from z0 turned the country view into a mat. -->
 	<VectorTileSource id="bus" url={tilesUrl('bus')} attribution="">
+		<!-- The casing stays solid where the route is dotted. A dotted casing
+		     would have to keep its dots in step with the ones on top, and a dash
+		     pattern is measured in line widths — so a wider casing spaces its dots
+		     further apart and drifts out of phase along the route. Solid, it reads
+		     as a thin acceptance-coloured route with the bus dots laid over it. -->
 		<LineLayer
-			id="bus-line"
+			id="bus-casing"
 			sourceLayer="bus"
+			minzoom={10}
 			filter={mapView.filter}
 			layout={{
 				visibility: busVisibility,
@@ -279,15 +364,49 @@
 			paint={{
 				'line-color': statusColor,
 				'line-opacity': 0.85,
-				// The dash pattern is measured in line widths, so widening the
-				// line lengthens the dashes with it; the ratio tightens to keep
-				// the route reading as dashed rather than as a chain of blobs.
-				'line-dasharray': [1, 2],
-				'line-width': busWidth
+				'line-width': busCasingWidth
 			}}
 			onmousemove={(event) => (hoveredBus = read(event))}
 			onmouseleave={() => (hoveredBus = null)}
 			onclick={(event) => pick(event, 'bus')}
+		/>
+		<!-- Between the two: a solid `paper` core the width of the dots, so what
+		     shows between them is the ground rather than the casing colour. Without
+		     it the route reads as a coloured line with dots on it instead of as a
+		     dotted black line with a coloured rim. -->
+		<LineLayer
+			id="bus-core"
+			sourceLayer="bus"
+			minzoom={10}
+			filter={mapView.filter}
+			layout={{
+				visibility: busVisibility,
+				'line-cap': 'round',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': paper,
+				'line-opacity': 1,
+				'line-width': busWidth
+			}}
+		/>
+		<!-- A zero-length dash with round caps is a dot the width of the line. -->
+		<LineLayer
+			id="bus-line"
+			sourceLayer="bus"
+			minzoom={10}
+			filter={mapView.filter}
+			layout={{
+				visibility: busVisibility,
+				'line-cap': 'round',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': lineColor,
+				'line-opacity': 1,
+				'line-dasharray': [0, 2],
+				'line-width': busWidth
+			}}
 		/>
 	</VectorTileSource>
 
@@ -303,16 +422,15 @@
 			filter={mapView.filter}
 			layout={{ visibility: busStopVisibility }}
 			paint={{
-				// Hollow, blue-ringed and exactly the size of a station dot: the
-				// two read as the same kind of thing — a place you board — and
-				// the blue keeps them apart from the acceptance colours. See
-				// `BUS_STOP_COLOR`.
+				// Hollow and blue-ringed: it reads as the same kind of thing as a
+				// station — a place you board — a size down, and the blue keeps
+				// it apart from the acceptance colours. See `BUS_STOP_COLOR`.
 				'circle-color': paper,
 				'circle-stroke-color': BUS_STOP_COLOR,
 				'circle-stroke-width': 1.8,
 				'circle-opacity': 1,
 				'circle-stroke-opacity': 1,
-				'circle-radius': STOP_RADIUS
+				'circle-radius': BUSSTOP_RADIUS
 			}}
 			onclick={(event) => pick(event, 'busstop')}
 		/>
@@ -341,28 +459,64 @@
 		/>
 	</VectorTileSource>
 
+	<!-- One source, three groups drawn bottom to top: trams, then local railways,
+	     then the shinkansen, so the fastest line stays legible where several run
+	     side by side.
+
+	     Every group is the same three-layer sandwich: an acceptance-coloured
+	     casing, the route itself in its mode colour, and — for the two hatched
+	     kinds — white ticks punched through it. Where a tick falls, the casing
+	     shows as a rim around the white rather than as colour across the line,
+	     which is why the casing has to be the widest of the three.
+
+	     The hatch layers are `line-cap: 'butt'`: round caps grow each dash by
+	     half a width at both ends, which closes up a fine hatch into a solid
+	     line. Dash lengths are multiples of the line width, so they follow the
+	     zoom ramp on their own. -->
 	<VectorTileSource id="railway" url={tilesUrl('railway')} attribution="">
-		<!-- A casing under the coloured line keeps green-on-green readable where a
-		     railway crosses a park or a golf course on the basemap. -->
+		<!-- A tram is the one rail kind drawn unhatched: the lines are short and
+		     tightly curved, and a hatch on them reads as noise. -->
 		<LineLayer
-			id="railway-casing"
+			id="tram-casing"
 			sourceLayer="railway"
-			filter={mapView.filter}
+			minzoom={10}
+			filter={railKindFilter('tram', mapView.filter)}
 			layout={{
-				visibility: railwayVisibility,
+				visibility: tramVisibility,
 				'line-cap': 'round',
 				'line-join': 'round'
 			}}
 			paint={{
-				'line-color': paper,
-				'line-opacity': 0.9,
-				'line-width': railwayCasingWidth
+				'line-color': statusColor,
+				'line-opacity': 1,
+				'line-width': tramCasingWidth
 			}}
+			onmousemove={(event) => (hoveredRailway = read(event))}
+			onmouseleave={() => (hoveredRailway = null)}
+			onclick={(event) => pick(event, 'railway')}
 		/>
 		<LineLayer
-			id="railway-line"
+			id="tram-line"
 			sourceLayer="railway"
-			filter={mapView.filter}
+			minzoom={10}
+			filter={railKindFilter('tram', mapView.filter)}
+			layout={{
+				visibility: tramVisibility,
+				'line-cap': 'round',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': lineColor,
+				'line-opacity': 1,
+				'line-width': tramWidth
+			}}
+		/>
+
+		<LineLayer
+			id="railway-casing"
+			sourceLayer="railway"
+			minzoom={6}
+			filter={railKindFilter('railway', mapView.filter)}
 			layout={{
 				visibility: railwayVisibility,
 				'line-cap': 'round',
@@ -371,11 +525,101 @@
 			paint={{
 				'line-color': statusColor,
 				'line-opacity': 1,
-				'line-width': railwayWidth
+				'line-width': railwayCasingWidth
 			}}
 			onmousemove={(event) => (hoveredRailway = read(event))}
 			onmouseleave={() => (hoveredRailway = null)}
 			onclick={(event) => pick(event, 'railway')}
+		/>
+		<LineLayer
+			id="railway-line"
+			sourceLayer="railway"
+			minzoom={6}
+			filter={railKindFilter('railway', mapView.filter)}
+			layout={{
+				visibility: railwayVisibility,
+				'line-cap': 'round',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': lineColor,
+				'line-opacity': 1,
+				'line-width': railwayWidth
+			}}
+		/>
+		<LineLayer
+			id="railway-hatch"
+			sourceLayer="railway"
+			minzoom={6}
+			filter={railKindFilter('railway', mapView.filter)}
+			layout={{
+				visibility: railwayVisibility,
+				'line-cap': 'butt',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': paper,
+				'line-opacity': 1,
+				// Short ticks on a long run: an even 1:1 alternation breaks the
+				// line into a chain of blocks at close zooms.
+				'line-dasharray': [0.6, 1.6],
+				'line-width': railwayWidth
+			}}
+		/>
+
+		<!-- The shinkansen: the same hatch, in blue and a third wider again, so it
+		     stays the line you find first where several run together. -->
+		<LineLayer
+			id="shinkansen-casing"
+			sourceLayer="railway"
+			minzoom={4}
+			filter={railKindFilter('shinkansen', mapView.filter)}
+			layout={{
+				visibility: shinkansenVisibility,
+				'line-cap': 'round',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': statusColor,
+				'line-opacity': 1,
+				'line-width': shinkansenCasingWidth
+			}}
+			onmousemove={(event) => (hoveredRailway = read(event))}
+			onmouseleave={() => (hoveredRailway = null)}
+			onclick={(event) => pick(event, 'railway')}
+		/>
+		<LineLayer
+			id="shinkansen-line"
+			sourceLayer="railway"
+			minzoom={4}
+			filter={railKindFilter('shinkansen', mapView.filter)}
+			layout={{
+				visibility: shinkansenVisibility,
+				'line-cap': 'round',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': shinkansenColor,
+				'line-opacity': 1,
+				'line-width': shinkansenWidth
+			}}
+		/>
+		<LineLayer
+			id="shinkansen-hatch"
+			sourceLayer="railway"
+			minzoom={4}
+			filter={railKindFilter('shinkansen', mapView.filter)}
+			layout={{
+				visibility: shinkansenVisibility,
+				'line-cap': 'butt',
+				'line-join': 'round'
+			}}
+			paint={{
+				'line-color': paper,
+				'line-opacity': 1,
+				'line-dasharray': [0.6, 1.6],
+				'line-width': shinkansenWidth
+			}}
 		/>
 	</VectorTileSource>
 
@@ -387,12 +631,17 @@
 			filter={mapView.filter}
 			layout={{ visibility: stationVisibility }}
 			paint={{
+				// The ring takes the line colour, not the acceptance colour: a
+				// station belongs to the line it sits on, and the acceptance
+				// colour is the casing's job everywhere else on the map.
 				'circle-color': paper,
-				'circle-stroke-color': statusColor,
-				'circle-stroke-width': 1.8,
+				'circle-stroke-color': lineColor,
+				// Thicker than the bus stop ring in proportion to the larger
+				// radius: at 1.8 the bigger dot read as a white blob.
+				'circle-stroke-width': 2.2,
 				'circle-opacity': 1,
 				'circle-stroke-opacity': 1,
-				'circle-radius': STOP_RADIUS
+				'circle-radius': STATION_RADIUS
 			}}
 			onclick={(event) => pick(event, 'station')}
 		/>
