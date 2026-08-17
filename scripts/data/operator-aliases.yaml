@@ -1,0 +1,65 @@
+# Raw MLIT operator strings that name a participant under a different name.
+#
+# `coverage.normalize()` already folds away corporate forms and spacing, and
+# `coverage.split_joint()` handles the `A（株）・B（株）` spelling MLIT uses for a
+# jointly operated route. What is left is genuine renaming: N02/N07 usually
+# credit a municipality, while the participant list names its transport bureau.
+#
+# Sections are per mode because the same municipality can run an IC-enabled tram
+# and a cash-only community bus — 熊本市 and 札幌市 both do. `any` applies to both.
+#
+# Every entry here was found by the near-miss scan documented in
+# scripts/README.md; entries the scan surfaced but that are *not* the same
+# operator are listed at the bottom with the reason, so nobody re-adds them.
+
+aliases:
+  any:
+    名古屋市: nagoya-city-transportation-bureau
+    横浜市: yokohama-city-transportation-bureau
+    仙台市: sendai-city-transportation-bureau
+    京都市: kyoto-city-transportation-bureau
+    神戸市: kobe-city-transportation-bureau
+
+  rail:
+    # Municipal subways and trams. Their cities run no municipal bus (Sapporo's
+    # and Kumamoto's were both wound up), so these stay rail-only.
+    札幌市: sapporo-city-transportation-bureau
+    福岡市: fukuoka-city-subway
+    熊本市: kumamoto-city-tram
+    函館市: hakodate-city-tram
+
+  bus:
+    川崎市: kawasaki-city-bus
+    北九州市: kitakyushu-city-bus
+    八戸市: hachinohe-city-bus
+    青森市: aomori-city-bus
+    徳島市: tokushima-city-bus
+    佐賀市: saga-city-bus
+    長崎県: nagasaki-prefecture-bus-kenei-bus
+    高槻市: takatsuki-city-bus
+    伊丹市: itami-city-bus
+    # Community buses the participant list files under a prefecture-qualified
+    # name (`福岡県宗像市`) or a "…コミュニティバス" label.
+    宗像市: jp-fukuoka-munakata
+    春日市: jp-fukuoka-kasuga
+    大竹市: jp-hiroshima-otake
+    近江八幡市: jp-shiga-omihachiman
+    奥州市: jp-oshu-community
+    秋田市: jp-akita-community
+    花巻市: jp-hanamaki-community
+    米沢市: jp-yonezawa-community
+    # Keisei split its bus operation into four regional companies; MLIT still
+    # credits the parent. All four are participants.
+    京成バス: keisei-bus-tokyo
+
+# Deliberately NOT aliased — the near-miss scan flags these, but they are
+# different companies from the participant they resemble:
+#
+#   新潟交通佐渡        separate Sado Island company; 新潟交通 is the mainland one
+#   熊野御坊南海バス    Nankai subsidiary, not covered by 南海バス's participation
+#   京都交通            Nihon Kotsu group, unrelated to 京阪京都交通
+#   中央交通            matches three unrelated "…中央交通" participants
+#   八幡市              Kyoto prefecture city, not 滋賀県近江八幡市
+#   美浜町              exists in Fukui, Aichi and Wakayama; only Fukui's is listed
+#   北海道バス          unrelated to ジェイ・アール北海道バス
+#   宇都宮市            see the `unknown` entry in ic-coverage.yaml

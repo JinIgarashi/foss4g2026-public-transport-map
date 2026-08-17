@@ -1,0 +1,2786 @@
+# Which operators accept the ten mutually usable transit IC cards.
+#
+# Seeded from the `対象事業者一覧` table of the Japanese Wikipedia article on the
+# nationwide mutual-use service (see `meta.references`), then curated by hand.
+# `scripts/seed_from_wikipedia.py` regenerates the seed; it never rewrites this
+# file, because the curation below is the part that cannot be derived.
+#
+#   status: full     every line/route of this operator accepts the ten cards
+#           partial  only inside certain IC areas or on certain sections
+#           none     no IC ticketing
+#           unknown  we could not determine it — rendered grey, never as "no"
+#
+#   lines:  per-line overrides keyed by the N02_003 line name, for operators
+#           (all six JR companies) whose coverage is defined by area, not by
+#           company. A line absent from every list keeps the operator `status`.
+#
+# `meta.unlisted_status` decides what an operator missing from this file means.
+# The participant list is published as exhaustive and every rail operator plus
+# every near-miss bus name has been reviewed against it, so `none` is the honest
+# reading — see scripts/README.md for how that review is reproduced.
+meta:
+  source_date: '2026-04-01'
+  unlisted_status:
+    rail: none
+    bus: none
+  references:
+    - https://ja.wikipedia.org/wiki/交通系ICカード全国相互利用サービス
+    - https://www.jreast.co.jp/suica/area/pdf/icrule_carrier.pdf
+    - https://www.jr-odekake.net/icoca/pdf/area_icoca.pdf
+areas:
+  kitaca:
+    name:
+      en: Kitaca area
+      ja: Kitacaエリア
+    issuer: JR Hokkaido
+  suica:
+    name:
+      en: Suica area
+      ja: Suicaエリア
+    issuer: JR East
+  pasmo:
+    name:
+      en: PASMO area
+      ja: PASMOエリア
+    issuer: Tokyo-area private railways and buses
+  toica:
+    name:
+      en: TOICA area
+      ja: TOICAエリア
+    issuer: JR Central
+  manaca:
+    name:
+      en: manaca area
+      ja: manacaエリア
+    issuer: Nagoya-area operators
+  icoca:
+    name:
+      en: ICOCA area
+      ja: ICOCAエリア
+    issuer: JR West
+  pitapa:
+    name:
+      en: PiTaPa area
+      ja: PiTaPaエリア
+    issuer: Kansai-area private railways and buses
+  sugoca:
+    name:
+      en: SUGOCA area
+      ja: SUGOCAエリア
+    issuer: JR Kyushu
+  nimoca:
+    name:
+      en: nimoca area
+      ja: nimocaエリア
+    issuer: Nishitetsu and partners
+  hayakaken:
+    name:
+      en: Hayakaken area
+      ja: はやかけんエリア
+    issuer: Fukuoka City Subway
+operators:
+  - id: fukuoka-city-subway
+    name:
+      ja: 福岡市交通局
+      en: Fukuoka City Subway
+    area: hayakaken
+    modes:
+      - rail
+    status: full
+  - id: ir-ishikawa-railway
+    name:
+      ja: IRいしかわ鉄道
+      en: IR Ishikawa Railway
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jr-bus-chugoku
+    name:
+      ja: JRバス中国
+      en: JR Bus Chugoku
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jr-west-miyajima-ferry
+    name:
+      ja: JR西日本宮島フェリー
+      en: JR West Miyajima Ferry
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: ainokaze-toyama-railway
+    name:
+      ja: あいの風とやま鉄道
+      en: Ainokaze Toyama Railway
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: iwakuni-bus
+    name:
+      ja: いわくにバス
+      en: Iwakuni Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: echizen-railway
+    name:
+      ja: えちぜん鉄道
+      en: Echizen Railway
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: onomichi-bus
+    name:
+      ja: おのみちバス
+      en: Onomichi Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: kotoden-bus
+    name:
+      ja: ことでんバス
+      en: Kotoden Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: hd-nishi-hiroshima-bon-bus
+    name:
+      ja: エイチ・ディー西広島
+      en: HD Nishi-Hiroshima (Bon Bus)
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-b0c516deb4
+    name:
+      ja: エルム観光バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-2e43d0bb63
+    name:
+      ja: スカイレールサービス
+    area: icoca
+    modes:
+      - bus
+    status: none
+    note:
+      en: Closed in 2024 and replaced by a bus; the line still appears in the 2025 MLIT dataset.
+      ja: 2024年に廃止されバス代替となりましたが、2025年版の国土数値情報にはまだ収録されています。
+  - id: hapi-line-fukui
+    name:
+      ja: ハピラインふくい
+      en: Hapi-Line Fukui
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jp-81554636be
+    name:
+      ja: フォーブル
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: ichibata-bus
+    name:
+      ja: 一畑バス
+      en: Ichibata Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: manyosen
+    name:
+      ja: 万葉線
+      en: Manyosen
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: sangi-railway
+    name:
+      ja: 三岐鉄道
+      en: Sangi Railway
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jp-9efbe8b092
+    name:
+      ja: 中京交通
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: chugoku-bus
+    name:
+      ja: 中国バス
+      en: Chugoku Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-8027fc67bf
+    name:
+      ja: 中島汽船
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-4b67240d7a
+    name:
+      ja: 中鉄北部バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: ikasa-bus-company
+    name:
+      ja: 井笠バスカンパニー
+      en: Ikasa Bus Company
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-4bd63cb812
+    name:
+      ja: 交野市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: keifuku-bus
+    name:
+      ja: 京福バス
+      en: Keifuku Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: iyotetsu-bus
+    name:
+      ja: 伊予鉄バス
+      en: Iyotetsu Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: iyotetsu
+    name:
+      ja: 伊予鉄道
+      en: Iyotetsu
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: igatetsu
+    name:
+      ja: 伊賀鉄道
+      en: Igatetsu
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: bihoku-bus
+    name:
+      ja: 備北バス
+      en: Bihoku Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: bihoku-kotsu
+    name:
+      ja: 備北交通
+      en: Bihoku Kotsu
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: hojo-railway
+    name:
+      ja: 北条鉄道
+      en: Hojo Railway
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jp-c031f8f739
+    name:
+      ja: 北海道バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-8fbc71232a
+    name:
+      ja: 千歳相互観光バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jr-shikoku
+    name:
+      ja: 四国旅客鉄道
+      en: JR Shikoku
+    area: icoca
+    modes:
+      - rail
+    status: partial
+    note:
+      en: ICOCA is accepted around Takamatsu only; the rest of Shikoku is ticket-only.
+      ja: ICOCAが使えるのは高松近郊のみで、それ以外の四国内はきっぷのみです。
+    lines:
+      none:
+        - 予土線
+        - 内子線
+        - 徳島線
+        - 牟岐線
+  - id: yokkaichi-asunarou-railway
+    name:
+      ja: 四日市あすなろう鉄道
+      en: Yokkaichi Asunarou Railway
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jp-591fd3063e
+    name:
+      ja: 大阪バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-7557ec8d5d
+    name:
+      ja: 大阪府
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-838b883b41
+    name:
+      ja: 大阪府岬町
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-769fe00d50
+    name:
+      ja: 太子町
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: ube-city-bus
+    name:
+      ja: 宇部市交通局
+      en: Ube City Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: miyajima-matsudai-kisen-ferry
+    name:
+      ja: 宮島松大汽船
+      en: Miyajima Matsudai Kisen Ferry
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: toyama-chiho-railroad
+    name:
+      ja: 富山地方鉄道
+      en: Toyama Chiho Railroad
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jp-9ffee6aec5
+    name:
+      ja: 寝屋川市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-9a8de6efc8
+    name:
+      ja: 小松市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-249bdc25ac
+    name:
+      ja: 帝産湖南交通
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: kokoh-kanko
+    name:
+      ja: 広交観光
+      en: Kokoh Kanko
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: hiroshima-bus
+    name:
+      ja: 広島バス
+      en: Hiroshima Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: hiroshima-kotsu
+    name:
+      ja: 広島交通
+      en: Hiroshima Kotsu
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-hiroshima-otake
+    name:
+      ja: 広島県大竹市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: hiroshima-electric-railway-hiroden
+    name:
+      ja: 広島電鉄
+      en: Hiroshima Electric Railway (Hiroden)
+    area: icoca
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: hiroshima-rapid-transit-astram-line
+    name:
+      ja: 広島高速交通
+      en: Hiroshima Rapid Transit (Astram Line)
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: tokushima-bus
+    name:
+      ja: 徳島バス
+      en: Tokushima Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-b8df941107
+    name:
+      ja: 徳島バス南部
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: tokushima-city-bus
+    name:
+      ja: 徳島市交通局
+      en: Tokushima City Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-6b1f3caaf7
+    name:
+      ja: 敦賀海陸運輸
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-124adda666
+    name:
+      ja: 敦賀観光バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-1f49176897
+    name:
+      ja: 新日本観光自動車
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-3fbffd1759
+    name:
+      ja: 明光バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-eccc1e8af7
+    name:
+      ja: 本四バス開発
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-b62338fa14
+    name:
+      ja: 東京バス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-c81c00cad2
+    name:
+      ja: 東京都
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: matsue-city-bus
+    name:
+      ja: 松江市交通局
+      en: Matsue City Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: etajima-bus
+    name:
+      ja: 江田島バス
+      en: Etajima Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-3bd4b7b341
+    name:
+      ja: 河南町
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-0807b197c1
+    name:
+      ja: 港区
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: kokoku-bus
+    name:
+      ja: 湖国バス
+      en: Kokoku Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-shiga-omihachiman
+    name:
+      ja: 滋賀県近江八幡市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-835ea64ddc
+    name:
+      ja: 瀬戸内産交
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-2ef1dba354
+    name:
+      ja: 石川県
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: iwami-kotsu
+    name:
+      ja: 石見交通
+      en: Iwami Kotsu
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-915f816a1e
+    name:
+      ja: 神戸フェリーバス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-776384140b
+    name:
+      ja: 福井県美浜町
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: fukui-railway
+    name:
+      ja: 福井鉄道
+      en: Fukui Railway
+    area: icoca
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: jp-fukuoka-munakata
+    name:
+      ja: 福岡県宗像市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jp-fukuoka-kasuga
+    name:
+      ja: 福岡県春日市
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: geiyo-bus
+    name:
+      ja: 芸陽バス
+      en: Geiyo Bus
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jr-west
+    name:
+      ja: 西日本旅客鉄道
+      en: JR West
+    area: icoca
+    modes:
+      - rail
+    status: partial
+    note:
+      en:
+        ICOCA works inside the Kansai, Okayama–Hiroshima, Sanin and Hokuriku areas only, and a journey may not cross between
+        areas. Many rural lines are outside every area.
+      ja: 近畿・岡山広島・山陰・北陸の各ICOCAエリア内でのみ利用でき、エリアをまたぐ利用はできません。ローカル線の多くはエリア外です。
+    lines:
+      full:
+        - 大阪環状線
+        - JR東西線
+        - おおさか東線
+        - 桜島線
+        - 片町線
+        - 奈良線
+        - 湖西線
+        - 阪和線
+        - 関西空港線
+        - 桜井線
+        - 草津線
+        - 可部線
+        - 吉備線
+        - 呉線
+        - 七尾線
+      none:
+        - 木次線
+        - 因美線
+        - 美祢線
+        - 岩徳線
+        - 越美北線
+        - 小浜線
+        - 城端線
+        - 氷見線
+        - 山口線
+        - 姫新線
+        - 福塩線
+        - 舞鶴線
+        - 小野田線
+  - id: ohmi-railways
+    name:
+      ja: 近江鉄道
+      en: Ohmi Railways
+    area: icoca
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: jp-cd762442be
+    name:
+      ja: 野呂山タクシー
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: bocho-kotsu
+    name:
+      ja: 防長交通
+      en: Bocho Kotsu
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: tomotetsu
+    name:
+      ja: 鞆鉄道
+      en: Tomotetsu
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: takamatsu-kotohira-electric-railroad-kot
+    name:
+      ja: 高松琴平電気鉄道
+      en: Takamatsu-Kotohira Electric Railroad (Kotoden)
+    area: icoca
+    modes:
+      - rail
+    status: full
+  - id: jp-4422cf164f
+    name:
+      ja: 鳥取県コミュニティバス
+    area: icoca
+    modes:
+      - bus
+    status: full
+  - id: jr-hokkaido
+    name:
+      ja: 北海道旅客鉄道
+      en: JR Hokkaido
+    area: kitaca
+    modes:
+      - rail
+    status: partial
+    note:
+      en: Kitaca covers the Sapporo area only. Everything beyond it is ticket-only.
+      ja: Kitacaは札幌圏のみが対象です。それ以外の路線はきっぷのみです。
+    lines:
+      full:
+        - 千歳線
+        - 札沼線
+      none:
+        - 宗谷線
+        - 富良野線
+        - 日高線
+        - 根室線
+        - 海峡線
+        - 留萌線
+        - 石勝線
+        - 石北線
+        - 釧網線
+        - 北海道新幹線
+  - id: jp-d0bf5ee711
+    name:
+      ja: オーワ
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: hokuriku-railroad
+    name:
+      ja: 北陸鉄道
+      en: Hokuriku Railroad
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: jp-b21ee433d4
+    name:
+      ja: 名古屋ガイドウェイバス
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: nagoya-city-transportation-bureau
+    name:
+      ja: 名古屋市交通局
+      en: Nagoya City Transportation Bureau
+    area: manaca
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: aonami-line
+    name:
+      ja: 名古屋臨海高速鉄道
+      en: Aonami Line
+    area: manaca
+    modes:
+      - rail
+    status: full
+  - id: meitetsu-nagoya-railroad
+    name:
+      ja: 名古屋鉄道
+      en: Meitetsu (Nagoya Railroad)
+    area: manaca
+    modes:
+      - rail
+    status: full
+  - id: meitetsu-bus
+    name:
+      ja: 名鉄バス
+      en: Meitetsu Bus
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: jp-7cfea57291
+    name:
+      ja: 名鉄東部交通
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: jp-c0858f4ba3
+    name:
+      ja: 岐阜乗合自動車
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: linimo
+    name:
+      ja: 愛知高速交通
+      en: Linimo
+    area: manaca
+    modes:
+      - rail
+    status: full
+  - id: jp-ca68eaef3a
+    name:
+      ja: 知多乗合
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: jp-635c94d0b1
+    name:
+      ja: 豊栄交通
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: toyohashi-railroad
+    name:
+      ja: 豊橋鉄道
+      en: Toyohashi Railroad
+    area: manaca
+    modes:
+      - rail
+    status: full
+  - id: jp-1bd006662d
+    name:
+      ja: 豊鉄バス
+    area: manaca
+    modes:
+      - bus
+    status: full
+  - id: jp-c4e82c3009
+    name:
+      ja: JR九州バス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-f32d737476
+    name:
+      ja: させぼバス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-b58a2196fe
+    name:
+      ja: サンデン交通
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-e09e188710
+    name:
+      ja: 九州急行バス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-2eb539ac1a
+    name:
+      ja: 亀の井バス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: saga-city-bus
+    name:
+      ja: 佐賀市交通局
+      en: Saga City Bus
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: hakodate-bus
+    name:
+      ja: 函館バス
+      en: Hakodate Bus
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: hakodate-city-tram
+    name:
+      ja: 函館市企業局
+      en: Hakodate City Tram
+    area: nimoca
+    modes:
+      - rail
+    status: full
+  - id: kitakyushu-city-bus
+    name:
+      ja: 北九州市交通局
+      en: Kitakyushu City Bus
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-99c45ec230
+    name:
+      ja: 堀川バス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-6b503e678d
+    name:
+      ja: 大分バス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: oita-kotsu
+    name:
+      ja: 大分交通
+      en: Oita Kotsu
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: miyazaki-kotsu
+    name:
+      ja: 宮崎交通
+      en: Miyazaki Kotsu
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-373b0cdb89
+    name:
+      ja: 日田バス
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-08444c8039
+    name:
+      ja: 昭和自動車
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: matsuura-railway
+    name:
+      ja: 松浦鉄道
+      en: Matsuura Railway
+    area: nimoca
+    modes:
+      - rail
+    status: full
+  - id: kumamoto-city-tram
+    name:
+      ja: 熊本市交通局
+      en: Kumamoto City Tram
+    area: nimoca
+    modes:
+      - rail
+    status: full
+  - id: jp-55d6a785ef
+    name:
+      ja: 祐徳自動車
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: chikuho-electric-railroad
+    name:
+      ja: 筑豊電気鉄道
+      en: Chikuho Electric Railroad
+    area: nimoca
+    modes:
+      - rail
+    status: full
+  - id: nishitetsu-nishi-nippon-railroad
+    name:
+      ja: 西日本鉄道
+      en: Nishitetsu (Nishi-Nippon Railroad)
+    area: nimoca
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: jp-e200a5d6ae
+    name:
+      ja: 西肥自動車
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-4ae17cf2ab
+    name:
+      ja: 西鉄バス久留米
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-763b86e82b
+    name:
+      ja: 西鉄バス佐賀
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-9d66381624
+    name:
+      ja: 西鉄バス北九州
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-e04dfb4838
+    name:
+      ja: 西鉄バス大牟田
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: jp-f9dc105d0f
+    name:
+      ja: 西鉄バス筑豊
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: nagasaki-prefecture-bus-kenei-bus
+    name:
+      ja: 長崎県交通局
+      en: Nagasaki Prefecture Bus (Kenei Bus)
+    area: nimoca
+    modes:
+      - bus
+    status: full
+  - id: nagasaki-electric-tramway
+    name:
+      ja: 長崎電気軌道
+      en: Nagasaki Electric Tramway
+    area: nimoca
+    modes:
+      - rail
+    status: full
+  - id: jp-6554dadcf4
+    name:
+      ja: あすか交通
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: yurikamome
+    name:
+      ja: ゆりかもめ
+      en: Yurikamome
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-af4b5431cf
+    name:
+      ja: イーグルバス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-60e4b87caf
+    name:
+      ja: フジエクスプレス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-b0a4095303
+    name:
+      ja: 京成タクシーイースト
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-b49c1df598
+    name:
+      ja: 京成バス千葉イースト
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-f3560f4094
+    name:
+      ja: 京成バス千葉ウエスト
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-315ee7e782
+    name:
+      ja: 京成バス千葉セントラル
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: keisei-bus-tokyo
+    name:
+      ja: 京成バス東京
+      en: Keisei Bus Tokyo
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: keisei-electric-railway
+    name:
+      ja: 京成電鉄
+      en: Keisei Electric Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: keikyu-bus
+    name:
+      ja: 京浜急行バス
+      en: Keikyu Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: keikyu-corporation
+    name:
+      ja: 京浜急行電鉄
+      en: Keikyu Corporation
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-c675ac535e
+    name:
+      ja: 京王バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: keio-corporation
+    name:
+      ja: 京王電鉄
+      en: Keio Corporation
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: keio-bus
+    name:
+      ja: 京王電鉄バス
+      en: Keio Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-36fd4be27f
+    name:
+      ja: 伊豆箱根バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: izuhakone-railway
+    name:
+      ja: 伊豆箱根鉄道
+      en: Izuhakone Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: hokuso-railway
+    name:
+      ja: 北総鉄道
+      en: Hokuso Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-2e4cc7ab26
+    name:
+      ja: 千葉シーサイドバス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: chiba-urban-monorail
+    name:
+      ja: 千葉都市モノレール
+      en: Chiba Urban Monorail
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-85bb303a58
+    name:
+      ja: 国際十王交通
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: kokusai-kogyo-bus
+    name:
+      ja: 国際興業
+      en: Kokusai Kogyo Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: saitama-railway
+    name:
+      ja: 埼玉高速鉄道
+      en: Saitama Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: tama-toshi-monorail
+    name:
+      ja: 多摩都市モノレール
+      en: Tama Toshi Monorail
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-792e7c6736
+    name:
+      ja: 富士急シティバス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-8122928101
+    name:
+      ja: 富士急バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-af06a1c910
+    name:
+      ja: 富士急モビリティ
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-823bf9f6ef
+    name:
+      ja: 富士急静岡バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-250e34f3a7
+    name:
+      ja: 小湊鉄道
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-a700958ac6
+    name:
+      ja: 小田急ハイウェイバス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: odakyu-bus
+    name:
+      ja: 小田急バス
+      en: Odakyu Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-38af68aa76
+    name:
+      ja: 小田急箱根
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: odakyu-electric-railway
+    name:
+      ja: 小田急電鉄
+      en: Odakyu Electric Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: yamanashi-kotsu
+    name:
+      ja: 山梨交通
+      en: Yamanashi Kotsu
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: kawasaki-city-bus
+    name:
+      ja: 川崎市交通局
+      en: Kawasaki City Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-5d3561455c
+    name:
+      ja: 川崎鶴見臨港バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-46381c2d19
+    name:
+      ja: 川越観光自動車
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-011164f55f
+    name:
+      ja: 平和交通
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-b0042e82c4
+    name:
+      ja: 日東交通
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-c3c36f2203
+    name:
+      ja: 日立自動車交通
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-c928f3b86c
+    name:
+      ja: 朝日自動車
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-9ae48b0055
+    name:
+      ja: 東京BRT
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: tokyo-metro
+    name:
+      ja: 東京地下鉄
+      en: Tokyo Metro
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: airport-limousine-tokyo-airport-transpor
+    name:
+      ja: 東京空港交通
+      en: Airport Limousine (Tokyo Airport Transport)
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: toei-tokyo-metropolitan-bureau-of-transp
+    name:
+      ja: 東京都交通局
+      en: Toei (Tokyo Metropolitan Bureau of Transportation)
+    area: pasmo
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: tokyu-bus
+    name:
+      ja: 東急バス
+      en: Tokyu Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: tokyu-railways
+    name:
+      ja: 東急電鉄
+      en: Tokyu Railways
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-bf404ad1b7
+    name:
+      ja: 東武バスウエスト
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: tobu-bus-central
+    name:
+      ja: 東武バスセントラル
+      en: Tobu Bus Central
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-2198b0325e
+    name:
+      ja: 東武バス日光
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: tobu-railway
+    name:
+      ja: 東武鉄道
+      en: Tobu Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-0d209e2ebb
+    name:
+      ja: 東洋バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-68364a7612
+    name:
+      ja: 東海バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: toyo-rapid-railway
+    name:
+      ja: 東葉高速鉄道
+      en: Toyo Rapid Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: kanazawa-seaside-line
+    name:
+      ja: 横浜シーサイドライン
+      en: Kanazawa Seaside Line
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-6bb7d9af4d
+    name:
+      ja: 横浜交通開発
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: yokohama-city-transportation-bureau
+    name:
+      ja: 横浜市交通局
+      en: Yokohama City Transportation Bureau
+    area: pasmo
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: yokohama-minatomirai-railway
+    name:
+      ja: 横浜高速鉄道
+      en: Yokohama Minatomirai Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: enoshima-electric-railway
+    name:
+      ja: 江ノ島電鉄
+      en: Enoshima Electric Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-42f481d33c
+    name:
+      ja: 江ノ電バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: shonan-monorail
+    name:
+      ja: 湘南モノレール
+      en: Shonan Monorail
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: sotetsu-sagami-railway
+    name:
+      ja: 相模鉄道
+      en: Sotetsu (Sagami Railway)
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: sotetsu-bus
+    name:
+      ja: 相鉄バス
+      en: Sotetsu Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-b0daa533d1
+    name:
+      ja: 石川タクシー富士
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-bd087fe4dd
+    name:
+      ja: 神奈中タクシー
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-43b62566e7
+    name:
+      ja: 神奈中観光
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: kanachu-kanagawa-chuo-kotsu
+    name:
+      ja: 神奈川中央交通
+      en: Kanachu (Kanagawa Chuo Kotsu)
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: chichibu-railway
+    name:
+      ja: 秩父鉄道
+      en: Chichibu Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: tachikawa-bus
+    name:
+      ja: 立川バス
+      en: Tachikawa Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: hakone-tozan-bus
+    name:
+      ja: 箱根登山バス
+      en: Hakone Tozan Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: maihama-resort-line-disney-resort-line
+    name:
+      ja: 舞浜リゾートライン
+      en: Maihama Resort Line (Disney Resort Line)
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: jp-dd165cf24f
+    name:
+      ja: 茨城急行自動車
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: nishi-tokyo-bus
+    name:
+      ja: 西東京バス
+      en: Nishi-Tokyo Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: seibu-bus
+    name:
+      ja: 西武バス
+      en: Seibu Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-638ef8def6
+    name:
+      ja: 西武観光バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: seibu-railway
+    name:
+      ja: 西武鉄道
+      en: Seibu Railway
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: kanto-bus
+    name:
+      ja: 関東バス
+      en: Kanto Bus
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: kanto-railway
+    name:
+      ja: 関東鉄道
+      en: Kanto Railway
+    area: pasmo
+    modes:
+      - bus
+    status: full
+    note:
+      en: On the railway, only Suica and PASMO are accepted — the other eight cards are not.
+      ja: 鉄道線ではSuicaとPASMOのみ利用でき、他の8カードは使えません。
+  - id: jp-7857936895
+    name:
+      ja: 関越交通
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-951b554d00
+    name:
+      ja: 関鉄観光バス
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: jp-d80e0d2b41
+    name:
+      ja: 阪東自動車
+    area: pasmo
+    modes:
+      - bus
+    status: full
+  - id: tsukuba-express
+    name:
+      ja: 首都圏新都市鉄道
+      en: Tsukuba Express
+    area: pasmo
+    modes:
+      - rail
+    status: full
+  - id: shizutetsu-just-line
+    name:
+      ja: しずてつジャストライン
+      en: Shizutetsu Just Line
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-cb91dc0688
+    name:
+      ja: ウイング神姫
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-d9edb5bd0e
+    name:
+      ja: エヌシーバス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-b9c15c9a19
+    name:
+      ja: ヤサカバス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-09ad7ec0be
+    name:
+      ja: 三交伊勢志摩交通
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: mie-kotsu
+    name:
+      ja: 三重交通
+      en: Mie Kotsu
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-3c96fb91dd
+    name:
+      ja: 三重急行自動車
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: shimoden
+    name:
+      ja: 下津井電鉄
+      en: Shimoden
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: ryobi-holdings
+    name:
+      ja: 両備ホールディングス
+      en: Ryobi Holdings
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: chutetsu-bus
+    name:
+      ja: 中鉄バス
+      en: Chutetsu Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: keifuku-electric-railroad-randen
+    name:
+      ja: 京福電気鉄道
+      en: Keifuku Electric Railroad (Randen)
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: jp-8816a8a1a5
+    name:
+      ja: 京都バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-fa3c39c7ce
+    name:
+      ja: 京都京阪バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: kyoto-city-transportation-bureau
+    name:
+      ja: 京都市交通局
+      en: Kyoto City Transportation Bureau
+    area: pitapa
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: keihan-bus
+    name:
+      ja: 京阪バス
+      en: Keihan Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-01946ceb67
+    name:
+      ja: 京阪京都交通
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: keihan-electric-railway
+    name:
+      ja: 京阪電気鉄道
+      en: Keihan Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: itami-city-bus
+    name:
+      ja: 伊丹市交通局
+      en: Itami City Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-eb95522788
+    name:
+      ja: 八風バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: kita-osaka-kyuko-railway
+    name:
+      ja: 北大阪急行電鉄
+      en: Kita-Osaka Kyuko Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: jp-f927022871
+    name:
+      ja: 南海りんかんバス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-d39d113521
+    name:
+      ja: 南海ウイングバス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-6c6ce14a7a
+    name:
+      ja: 南海バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: nankai-electric-railway
+    name:
+      ja: 南海電気鉄道
+      en: Nankai Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: eizan-electric-railway
+    name:
+      ja: 叡山電鉄
+      en: Eizan Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: jp-b65a1d85ed
+    name:
+      ja: 名阪近鉄バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-51fd4be431
+    name:
+      ja: 和歌山バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-a53437166b
+    name:
+      ja: 和歌山バス那賀
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: osaka-city-bus
+    name:
+      ja: 大阪シティバス
+      en: Osaka City Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: osaka-monorail
+    name:
+      ja: 大阪モノレール
+      en: Osaka Monorail
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: osaka-metro
+    name:
+      ja: 大阪市高速電気軌道
+      en: Osaka Metro
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: nara-kotsu
+    name:
+      ja: 奈良交通
+      en: Nara Kotsu
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-37c7a0f229
+    name:
+      ja: 尼崎交通事業振興
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-6c9a32c50f
+    name:
+      ja: 山陽バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: sanyo-electric-railway
+    name:
+      ja: 山陽電気鉄道
+      en: Sanyo Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: okayama-electric-tramway
+    name:
+      ja: 岡山電気軌道
+      en: Okayama Electric Tramway
+    area: pitapa
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: honshi-kaikyo-bus
+    name:
+      ja: 本四海峡バス
+      en: Honshi Kaikyo Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: mizuma-railway
+    name:
+      ja: 水間鉄道
+      en: Mizuma Railway
+    area: pitapa
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: jp-f96429fcfb
+    name:
+      ja: 江若交通
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-b8a8a0aa15
+    name:
+      ja: 淡路交通
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-18fa2d6edb
+    name:
+      ja: 神姫ゾーンバス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: shinki-bus
+    name:
+      ja: 神姫バス
+      en: Shinki Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: kobe-city-transportation-bureau
+    name:
+      ja: 神戸市交通局
+      en: Kobe City Transportation Bureau
+    area: pitapa
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: kobe-new-transit-port-liner
+    name:
+      ja: 神戸新交通
+      en: Kobe New Transit (Port Liner)
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: kobe-electric-railway
+    name:
+      ja: 神戸電鉄
+      en: Kobe Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: jp-535403794a
+    name:
+      ja: 神鉄バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: nose-electric-railway
+    name:
+      ja: 能勢電鉄
+      en: Nose Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: west-japan-jr-bus
+    name:
+      ja: 西日本ジェイアールバス
+      en: West Japan JR Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: kintetsu-railway
+    name:
+      ja: 近畿日本鉄道
+      en: Kintetsu Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+    note:
+      en: Accepted across the network; the two cable-car lines are cash or paper ticket only.
+      ja: 全線で利用できますが、2つのケーブル線は現金・きっぷのみです。
+    lines:
+      none:
+        - 生駒鋼索線
+        - 西信貴鋼索線
+  - id: kintetsu-bus
+    name:
+      ja: 近鉄バス
+      en: Kintetsu Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-67c879c4da
+    name:
+      ja: 関西空港交通
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: hankai-tramway
+    name:
+      ja: 阪堺電気軌道
+      en: Hankai Tramway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: hankyu-bus
+    name:
+      ja: 阪急バス
+      en: Hankyu Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-c4d2454fbd
+    name:
+      ja: 阪急観光バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: hankyu-railway
+    name:
+      ja: 阪急電鉄
+      en: Hankyu Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: jp-69eeefdb5b
+    name:
+      ja: 阪神バス
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: hanshin-electric-railway
+    name:
+      ja: 阪神電気鉄道
+      en: Hanshin Electric Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: shizuoka-railway
+    name:
+      ja: 静岡鉄道
+      en: Shizuoka Railway
+    area: pitapa
+    modes:
+      - rail
+    status: full
+  - id: takatsuki-city-bus
+    name:
+      ja: 高槻市交通部
+      en: Takatsuki City Bus
+    area: pitapa
+    modes:
+      - bus
+    status: full
+  - id: jp-103d9cdeb3
+    name:
+      ja: さいかい交通
+    area: sugoca
+    modes:
+      - bus
+    status: full
+  - id: jr-kyushu
+    name:
+      ja: 九州旅客鉄道
+      en: JR Kyushu
+    area: sugoca
+    modes:
+      - rail
+    status: partial
+    note:
+      en: SUGOCA covers the Fukuoka, Kumamoto, Oita, Nagasaki, Miyazaki and Kagoshima urban areas.
+      ja: SUGOCAは福岡・熊本・大分・長崎・宮崎・鹿児島の各都市圏が対象です。
+    lines:
+      full:
+        - 香椎線
+        - 篠栗線
+        - 筑肥線
+        - 宮崎空港線
+      none:
+        - 吉都線
+        - 日南線
+        - 肥薩線
+  - id: kitakyushu-monorail
+    name:
+      ja: 北九州高速鉄道
+      en: Kitakyushu Monorail
+    area: sugoca
+    modes:
+      - rail
+    status: full
+  - id: nagasaki-bus
+    name:
+      ja: 長崎自動車
+      en: Nagasaki Bus
+    area: sugoca
+    modes:
+      - bus
+    status: full
+  - id: shinano-railway
+    name:
+      ja: しなの鉄道
+      en: Shinano Railway
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: jp-25b8bab69c
+    name:
+      ja: じょうてつ
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-5cb2557aa5
+    name:
+      ja: のざわ温泉交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-297b62d43b
+    name:
+      ja: アイ・ケーアライアンス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: alpico-kotsu
+    name:
+      ja: アルピコ交通
+      en: Alpico Kotsu
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-02adb8ace9
+    name:
+      ja: ジェイアールバス東北
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jr-bus-kanto
+    name:
+      ja: ジェイアールバス関東
+      en: JR Bus Kanto
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jr-hokkaido-bus
+    name:
+      ja: ジェイ・アール北海道バス
+      en: JR Hokkaido Bus
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-cba6fc72fc
+    name:
+      ja: ジャパンタローズ
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-45a54deecc
+    name:
+      ja: ミヤコーバス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-94ab8d6a7e
+    name:
+      ja: 上信ハイヤー
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-f09a476a07
+    name:
+      ja: 上信観光バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-bba7b2e6ae
+    name:
+      ja: 上毛電気鉄道
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: sendai-city-transportation-bureau
+    name:
+      ja: 仙台市交通局
+      en: Sendai City Transportation Bureau
+    area: suica
+    modes:
+      - bus
+      - rail
+    status: full
+  - id: sendai-airport-transit
+    name:
+      ja: 仙台空港鉄道
+      en: Sendai Airport Transit
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: izukyu-corporation
+    name:
+      ja: 伊豆急行
+      en: Izukyu Corporation
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: hachinohe-city-bus
+    name:
+      ja: 八戸市交通部
+      en: Hachinohe City Bus
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: hokkaido-chuo-bus
+    name:
+      ja: 北海道中央バス
+      en: Hokkaido Chuo Bus
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-881e80d402
+    name:
+      ja: 十和田観光電鉄
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-df8d4e8cb3
+    name:
+      ja: 和光輸送
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: saitama-new-urban-transit-new-shuttle
+    name:
+      ja: 埼玉新都市交通
+      en: Saitama New Urban Transit (New Shuttle)
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: jp-c6bd909dcc
+    name:
+      ja: 大新東
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-oshu-community
+    name:
+      ja: 奥州市コミュニティバス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: utsunomiya-light-rail
+    name:
+      ja: 宇都宮ライトレール
+      en: Utsunomiya Light Rail
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: jp-064c672fa5
+    name:
+      ja: 宇都宮市コミュニティタクシー
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-55505a18ad
+    name:
+      ja: 宮城交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: fuji-kyuko-railway
+    name:
+      ja: 富士山麓電気鉄道
+      en: Fuji Kyuko Railway
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: jp-6dc393bd1f
+    name:
+      ja: 山形交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: iwate-kenkotsu
+    name:
+      ja: 岩手県交通
+      en: Iwate Kenkotsu
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-ad4d687d88
+    name:
+      ja: 岩手県北自動車
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-c334d1a534
+    name:
+      ja: 庄内交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: konan-bus
+    name:
+      ja: 弘南バス
+      en: Konan Bus
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-2d9caf8896
+    name:
+      ja: 新常磐交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: niigata-kotsu
+    name:
+      ja: 新潟交通
+      en: Niigata Kotsu
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-4f362174ac
+    name:
+      ja: 新潟交通観光バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-d2844b01a1
+    name:
+      ja: 日本中央バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-d987261a19
+    name:
+      ja: 日本中央交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-a5c1f144d3
+    name:
+      ja: 札幌市交通事業振興公社
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: sapporo-city-transportation-bureau
+    name:
+      ja: 札幌市交通局
+      en: Sapporo City Transportation Bureau
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: tokyo-monorail
+    name:
+      ja: 東京モノレール
+      en: Tokyo Monorail
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: tokyo-waterfront-area-rapid-transit-rink
+    name:
+      ja: 東京臨海高速鉄道
+      en: Tokyo Waterfront Area Rapid Transit (Rinkai Line)
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: jr-east
+    name:
+      ja: 東日本旅客鉄道
+      en: JR East
+    area: suica
+    modes:
+      - rail
+    status: partial
+    note:
+      en:
+        Suica works inside the Greater Tokyo, Sendai, Niigata and Aomori–Morioka–Akita areas only, and a single journey may
+        not cross from one area into another. Rural lines outside those areas take paper tickets only.
+      ja: 首都圏・仙台・新潟・青森盛岡秋田の各Suicaエリア内でのみ利用でき、エリアをまたぐ利用はできません。エリア外の路線はきっぷのみです。
+    lines:
+      full:
+        - 山手線
+        - 赤羽線
+        - 京葉線
+        - 南武線
+        - 根岸線
+        - 横浜線
+        - 横須賀線
+        - 武蔵野線
+        - 鶴見線
+        - 五日市線
+        - 青梅線
+        - 川越線
+        - 相模線
+        - 東金線
+        - 内房線
+        - 外房線
+        - 成田線
+        - 鹿島線
+        - 総武線
+        - 水戸線
+        - 高崎線
+        - 両毛線
+        - 日光線
+        - 烏山線
+        - 東海道線
+        - 伊東線
+        - 仙石線
+        - 白新線
+        - 男鹿線
+      none:
+        - 久留里線
+        - 只見線
+        - 小海線
+        - 飯山線
+        - 米坂線
+        - 北上線
+        - 釜石線
+        - 陸羽東線
+        - 陸羽西線
+        - 左沢線
+        - 大湊線
+        - 五能線
+        - 篠ノ井線
+        - 大糸線
+        - 気仙沼線
+  - id: jp-fa3e1d91e9
+    name:
+      ja: 永井運輸
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: okinawa-urban-monorail-yui-rail
+    name:
+      ja: 沖縄都市モノレール
+      en: Okinawa Urban Monorail (Yui Rail)
+    area: suica
+    modes:
+      - rail
+    status: full
+  - id: jp-438259c02b
+    name:
+      ja: 泉観光バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-af3216e627
+    name:
+      ja: 矢島タクシー
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-7cd06ec773
+    name:
+      ja: 秋北バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-e85b0d3c00
+    name:
+      ja: 秋田中央交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-akita-community
+    name:
+      ja: 秋田市コミュニティバス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-yonezawa-community
+    name:
+      ja: 米沢市コミュニティバス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-acf9c344fa
+    name:
+      ja: 群馬バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-dab1f205c1
+    name:
+      ja: 群馬中央バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-hanamaki-community
+    name:
+      ja: 花巻市コミュニティバス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-e1b08a5386
+    name:
+      ja: 蒲原鉄道
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-22c08aebc7
+    name:
+      ja: 越後交通
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-8bfcefc81f
+    name:
+      ja: 長野県公共交通活性化協議会
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-eb85cf168c
+    name:
+      ja: 長電バス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: kanto-jidosha
+    name:
+      ja: 関東自動車
+      en: Kanto Jidosha
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-b2621e88c1
+    name:
+      ja: 青森市コミュニティバス
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: aomori-city-bus
+    name:
+      ja: 青森市企業局
+      en: Aomori City Bus
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: jp-d7c2e373c0
+    name:
+      ja: 頸城自動車
+    area: suica
+    modes:
+      - bus
+    status: full
+  - id: aichi-loop-line
+    name:
+      ja: 愛知環状鉄道
+      en: Aichi Loop Line
+    area: toica
+    modes:
+      - rail
+    status: full
+  - id: jr-central
+    name:
+      ja: 東海旅客鉄道
+      en: JR Central
+    area: toica
+    modes:
+      - rail
+    status: partial
+    note:
+      en: TOICA covers the Nagoya and Shizuoka areas; lines beyond them are ticket-only.
+      ja: TOICAは名古屋・静岡エリアが対象です。エリア外の路線はきっぷのみです。
+    lines:
+      full:
+        - 御殿場線
+        - 武豊線
+        - 太多線
+      none:
+        - 参宮線
+        - 名松線
+        - 紀勢線
+  - id: utsunomiya-city
+    name:
+      ja: 宇都宮市
+      en: Utsunomiya City community bus
+    area: null
+    modes:
+      - bus
+    status: unknown
+    note:
+      en:
+        The published list names Utsunomiya's community taxis but not its community buses, so we could not confirm this one
+        either way.
+      ja: 対象事業者一覧には宇都宮市のコミュニティタクシーは載っていますがコミュニティバスの記載がなく、対応状況を確認できませんでした。
+  - id: aoimori-railway
+    name:
+      ja: 青い森鉄道
+      en: Aoimori Railway
+    area: null
+    modes:
+      - rail
+    status: none
+    note:
+      en: The operator states IC cards cannot be used and no introduction date is set.
+      ja: 事業者が交通系ICカードは利用できず導入時期も未定と案内しています。
+  - id: igr-iwate-ginga
+    name:
+      ja: IGRいわて銀河鉄道
+      en: IGR Iwate Galaxy Railway
+    area: null
+    modes:
+      - rail
+    status: none
+    match:
+      - アイジーアールいわて銀河鉄道
+      - IGRいわて銀河鉄道
+    note:
+      en: The operator states Suica and PASMO cannot be used on its line.
+      ja: 事業者がSuica・PASMO等のICカード乗車券は利用できないと案内しています。

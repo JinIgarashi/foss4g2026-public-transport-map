@@ -141,3 +141,22 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# SvelteKit
+.svelte-kit/
+build/
+.vercel
+.netlify
+.wrangler
+
+# Environment (the Protomaps key lives here; the example file is tracked)
+.env
+.env.*
+!.env.example
+
+# Data pipeline: raw MLIT downloads and generated intermediates.
+# NOTE: static/tiles/*.pmtiles are deliberately TRACKED — see scripts/README.md.
+scripts/.cache/
+scripts/data/ic-coverage.generated.yaml
+scripts/.venv/
+__pycache__/
