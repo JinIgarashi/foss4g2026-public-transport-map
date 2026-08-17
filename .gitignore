@@ -158,5 +158,6 @@ build/
 # NOTE: static/tiles/*.pmtiles are deliberately TRACKED — see scripts/README.md.
 scripts/.cache/
 scripts/data/ic-coverage.generated.yaml
+scripts/data/name-en.generated.yaml
 scripts/.venv/
 __pycache__/

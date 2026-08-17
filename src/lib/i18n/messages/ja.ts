@@ -51,7 +51,8 @@ const ja: Messages = {
 		title: 'レイヤー',
 		railway: '鉄道',
 		bus: 'バスルート',
-		station: '駅',
+		station: '鉄道駅',
+		busstop: 'バス停',
 		filterTitle: '表示する状態',
 		collapse: 'パネルを隠す',
 		expand: 'レイヤーと絞り込みを表示'
@@ -61,6 +62,8 @@ const ja: Messages = {
 		title: 'ICカードの対応状況',
 		railwayLine: '鉄道',
 		busLine: 'バスルート',
+		railwayStation: '鉄道駅',
+		busStop: 'バス停',
 		collapse: '凡例を隠す',
 		expand: '凡例を表示'
 	},
@@ -68,11 +71,15 @@ const ja: Messages = {
 	popup: {
 		line: '路線',
 		mode: '種別',
+		operator: '事業者',
 		operatorType: '事業者種別',
 		cardArea: 'ICカードエリア',
+		routes: '系統',
+		moreRoutes: (count: number) => `ほか ${count} 系統`,
 		station: '駅',
 		railway: '鉄道',
-		bus: 'バスルート'
+		bus: 'バスルート',
+		busStop: 'バス停'
 	},
 
 	operatorFilter: {
@@ -135,6 +142,9 @@ const ja: Messages = {
 		icSourceBody:
 			'日本語版Wikipedia「交通系ICカード全国相互利用サービス」の対象事業者一覧をもとに手作業で整理し、JR東日本・JR西日本が公開している対象事業者一覧と突き合わせています。',
 		basemap: '背景地図',
+		names: '英語表記',
+		namesBody:
+			'国土数値情報には英語名が一切含まれていないため、駅名・バス停名・路線名・事業者名の英語表記は OpenStreetMap の name:en タグと Wikidata から取得しています。それでも見つからないものは自動でローマ字に変換しており、地名の読みを取り違えることがあります。日本語表記も必ず併記しています。',
 		disclaimer: 'ご利用にあたって',
 		disclaimerBody:
 			'これは公式サービスではなく個人の制作物です。IC対応状況は変わりますし、バスデータは2022年度版、対応表も独自の集計です。旅程の検討にはお使いいただけますが、実際に改札を通る前に事業者の公式情報をご確認ください。',
@@ -146,7 +156,8 @@ const ja: Messages = {
 
 	map: {
 		loading: '地図を読み込んでいます…',
-		attribution: '国土数値情報（鉄道データ N02 / バスルートデータ N07）国土交通省'
+		attribution:
+			'国土数値情報（鉄道データ N02 / バスルートデータ N07 / バス停留所データ P11）国土交通省'
 	}
 };
 

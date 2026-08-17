@@ -3,7 +3,7 @@ name = "transit-ic-tiles"
 version = "0.1.0"
 description = "Turns MLIT railway/bus data plus a curated IC-card table into PMTiles."
 requires-python = ">=3.12"
-dependencies = ["pyyaml>=6.0.2", "certifi>=2025.1.31"]
+dependencies = ["pyyaml>=6.0.2", "certifi>=2025.1.31", "pykakasi>=2.3.0"]
 
 [tool.uv]
 package = false

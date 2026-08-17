@@ -29,7 +29,7 @@
 	import { pmtilesProtocol, tilesUrl } from './pmtiles';
 	import { mapView } from './view.svelte';
 	import { operatorBounds } from './operators';
-	import { statusColorExpression } from './status';
+	import { BUS_STOP_COLOR, statusColorExpression } from './status';
 	import AboutDialog from '$lib/AboutDialog.svelte';
 	import BasemapSwitcher from './BasemapSwitcher.svelte';
 	import FeaturePopup, { type FeatureInfo } from './FeaturePopup.svelte';
@@ -58,6 +58,23 @@
 
 	const statusColor = statusColorExpression();
 
+	/**
+	 * One dot size for stations and bus stops both. They are the same kind of
+	 * thing to a traveller, so sizing them differently would say something the
+	 * map does not mean — and the legend draws them at one size too.
+	 */
+	const STOP_RADIUS: DataDrivenPropertyValueSpecification<number> = [
+		'interpolate',
+		['linear'],
+		['zoom'],
+		9,
+		2,
+		12,
+		3.5,
+		15,
+		5
+	];
+
 	/** Ink that has to stay legible against the basemap, not against the theme. */
 	let paper = $derived(mapView.isDarkBasemap ? '#0b1120' : '#ffffff');
 	let ink = $derived(mapView.isDarkBasemap ? '#e8eaed' : '#1f2328');
@@ -71,9 +88,22 @@
 	let stationVisibility = $derived<VisibilitySpecification>(
 		mapView.isVisible('station') ? 'visible' : 'none'
 	);
+	let busStopVisibility = $derived<VisibilitySpecification>(
+		mapView.isVisible('busstop') ? 'visible' : 'none'
+	);
+
+	/**
+	 * Which name a label shows. `ne` is the English name the tile pipeline
+	 * resolved — from OpenStreetMap, Wikidata or, failing both, transliteration —
+	 * and `coalesce` falls back to the Japanese one for the few features that
+	 * have none, which beats an unlabelled dot.
+	 */
+	let labelField = $derived<DataDrivenPropertyValueSpecification<string>>(
+		locale === 'en' ? ['coalesce', ['get', 'ne'], ['get', 'nm']] : ['get', 'nm']
+	);
 
 	/** Layers a click can open a popup for, innermost first. */
-	const CLICKABLE = ['station-dot', 'railway-line', 'bus-line'];
+	const CLICKABLE = ['station-dot', 'busstop-dot', 'railway-line', 'bus-line'];
 
 	/**
 	 * The line under the cursor, identified by attributes rather than by feature
@@ -252,12 +282,62 @@
 				// The dash pattern is measured in line widths, so widening the
 				// line lengthens the dashes with it; the ratio tightens to keep
 				// the route reading as dashed rather than as a chain of blobs.
-				'line-dasharray': [2, 1.2],
+				'line-dasharray': [1, 2],
 				'line-width': busWidth
 			}}
 			onmousemove={(event) => (hoveredBus = read(event))}
 			onmouseleave={() => (hoveredBus = null)}
 			onclick={(event) => pick(event, 'bus')}
+		/>
+	</VectorTileSource>
+
+	<!-- Bus stops sit above their routes and below the railways, the same order
+	     the lines themselves are in. They only appear from z13: nationwide there
+	     are a quarter of a million of them, and at city zooms they are what a
+	     visitor is actually looking for rather than clutter. -->
+	<VectorTileSource id="busstop" url={tilesUrl('busstop')} attribution="">
+		<CircleLayer
+			id="busstop-dot"
+			sourceLayer="busstop"
+			minzoom={13}
+			filter={mapView.filter}
+			layout={{ visibility: busStopVisibility }}
+			paint={{
+				// Hollow, blue-ringed and exactly the size of a station dot: the
+				// two read as the same kind of thing — a place you board — and
+				// the blue keeps them apart from the acceptance colours. See
+				// `BUS_STOP_COLOR`.
+				'circle-color': paper,
+				'circle-stroke-color': BUS_STOP_COLOR,
+				'circle-stroke-width': 1.8,
+				'circle-opacity': 1,
+				'circle-stroke-opacity': 1,
+				'circle-radius': STOP_RADIUS
+			}}
+			onclick={(event) => pick(event, 'busstop')}
+		/>
+		<!-- Two zooms later than the dots, and `text-optional` on both, so a
+		     crowded terminal drops bus stop names before station names. -->
+		<SymbolLayer
+			id="busstop-label"
+			sourceLayer="busstop"
+			minzoom={15}
+			filter={mapView.filter}
+			layout={{
+				visibility: busStopVisibility,
+				'text-field': labelField,
+				'text-font': ['Noto Sans Regular'],
+				'text-size': 10,
+				'text-anchor': 'left',
+				'text-offset': [0.6, 0],
+				'text-optional': true
+			}}
+			paint={{
+				'text-color': ink,
+				'text-halo-color': paper,
+				'text-halo-width': 1.2,
+				'text-opacity': 0.9
+			}}
 		/>
 	</VectorTileSource>
 
@@ -312,7 +392,7 @@
 				'circle-stroke-width': 1.8,
 				'circle-opacity': 1,
 				'circle-stroke-opacity': 1,
-				'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 2, 12, 3.5, 15, 5]
+				'circle-radius': STOP_RADIUS
 			}}
 			onclick={(event) => pick(event, 'station')}
 		/>
@@ -325,7 +405,7 @@
 			filter={mapView.filter}
 			layout={{
 				visibility: stationVisibility,
-				'text-field': ['get', 'nm'],
+				'text-field': labelField,
 				'text-font': ['Noto Sans Medium'],
 				'text-size': 11,
 				'text-anchor': 'left',

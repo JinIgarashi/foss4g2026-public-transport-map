@@ -3,7 +3,7 @@
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import { currentMessages } from '$lib/i18n';
-	import { STATUS_COLOR, STATUS_KEYS } from './status';
+	import { BUS_STOP_COLOR, STATUS_COLOR, STATUS_KEYS } from './status';
 
 	let t = $derived(currentMessages());
 	let expanded = $state(true);
@@ -63,6 +63,37 @@
 							/>
 						</svg>
 						<span>{t.legend.busLine}</span>
+					</div>
+					<!-- Both dots are drawn the way the map draws them: a hollow
+					     circle, so the fill reads as "no colour of its own". The
+					     station ring takes the acceptance colour on the map and
+					     stands in as neutral here; the bus stop ring is blue on
+					     the map too. -->
+					<div class="flex items-center gap-2">
+						<svg width="24" height="12" aria-hidden="true" class="shrink-0">
+							<circle
+								cx="12"
+								cy="6"
+								r="4"
+								fill="var(--color-background)"
+								stroke="currentColor"
+								stroke-width="1.8"
+							/>
+						</svg>
+						<span>{t.legend.railwayStation}</span>
+					</div>
+					<div class="flex items-center gap-2">
+						<svg width="24" height="12" aria-hidden="true" class="shrink-0">
+							<circle
+								cx="12"
+								cy="6"
+								r="4"
+								fill="var(--color-background)"
+								stroke={BUS_STOP_COLOR}
+								stroke-width="1.8"
+							/>
+						</svg>
+						<span>{t.legend.busStop}</span>
 					</div>
 				</div>
 			</div>

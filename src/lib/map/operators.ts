@@ -7,6 +7,8 @@ export interface OperatorEntry {
 	id: string;
 	ja: string;
 	en?: string;
+	/** `en` is a transliteration from `build_tiles.py`, not a curated name. */
+	enAuto?: boolean;
 	status: StatusKey;
 	modes: ('rail' | 'bus')[];
 	area?: string;
@@ -37,10 +39,11 @@ export function operatorById(id: string): OperatorEntry | undefined {
 }
 
 /**
- * Display name for the active locale. Only the operators a visitor is likely to
- * meet have a curated English name — 1,400 community bus services do not — so
- * everything else falls back to Japanese rather than showing a machine
- * transliteration nobody could match against a real bus.
+ * Display name for the active locale. Operators a visitor is likely to meet have
+ * a curated English name; the 1,400 community bus services behind them carry a
+ * transliterated one flagged `enAuto`, which is still far more use to a reader
+ * of English than the Japanese would be. The Japanese name is shown alongside it
+ * in the popup, so a wrong reading is visibly a reading and not a claim.
  */
 export function operatorName(operator: OperatorEntry, locale: Locale): string {
 	return locale === 'en' ? (operator.en ?? operator.ja) : operator.ja;

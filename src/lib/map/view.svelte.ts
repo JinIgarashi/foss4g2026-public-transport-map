@@ -2,7 +2,7 @@ import { SvelteSet } from 'svelte/reactivity';
 import type { FilterSpecification } from 'maplibre-gl';
 import { STATUS, STATUS_KEYS, type StatusKey } from './status';
 
-export type LayerKey = 'railway' | 'bus' | 'station';
+export type LayerKey = 'railway' | 'bus' | 'station' | 'busstop';
 
 /** Protomaps basemap flavours offered by the style switcher. */
 export type BasemapKey = 'white' | 'light' | 'dark';
@@ -13,7 +13,12 @@ export type BasemapKey = 'white' | 'light' | 'dark';
  * write it from different corners of the tree.
  */
 class MapView {
-	#layers = $state<Record<LayerKey, boolean>>({ railway: true, bus: true, station: true });
+	#layers = $state<Record<LayerKey, boolean>>({
+		railway: true,
+		bus: true,
+		station: true,
+		busstop: true
+	});
 	#statuses = new SvelteSet<StatusKey>(STATUS_KEYS);
 	#operators = new SvelteSet<string>();
 	#basemap = $state<BasemapKey>('white');

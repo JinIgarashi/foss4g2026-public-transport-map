@@ -36,6 +36,16 @@ export const STATUS_COLOR: Record<StatusKey, string> = {
 	unknown: '#9aa0a6'
 };
 
+/**
+ * The ring around a bus stop. Bus stops are the one thing on the map that is not
+ * coloured by acceptance: at z13 and closer there are hundreds of them in view,
+ * and four colours of dot on top of four colours of line was unreadable. One
+ * blue ring on a hollow dot says "bus stop" and leaves the colour vocabulary to
+ * the routes underneath, which carry the same operator's acceptance anyway. The
+ * status filter still applies, so a stop hidden by the filter disappears.
+ */
+export const BUS_STOP_COLOR = '#1a73e8';
+
 /** `["match", ["get","st"], 0, colour, …]` for a paint property. */
 export function statusColorExpression(): ExpressionSpecification {
 	const stops = STATUS_KEYS.flatMap((key) => [STATUS[key], STATUS_COLOR[key]]);

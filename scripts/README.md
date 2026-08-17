@@ -1,13 +1,15 @@
 # Tile pipeline
 
-Turns MLIT's railway and bus data, plus a curated IC-card acceptance table, into
-the three PMTiles archives the web map reads.
+Turns MLIT's railway, bus route and bus stop data, plus a curated IC-card
+acceptance table and English names gathered from OpenStreetMap and Wikidata,
+into the four PMTiles archives the web map reads.
 
 ```bash
 cd scripts
-uv run build_tiles.py              # reuse cached downloads
-uv run build_tiles.py --refresh    # re-download from MLIT first
-uv run build_tiles.py --skip-bus   # railways only — a ~30s loop instead of ~5min
+uv run build_tiles.py                 # reuse cached downloads
+uv run build_tiles.py --refresh       # re-download from MLIT, OSM and Wikidata first
+uv run build_tiles.py --skip-bus      # railways only — a ~30s loop instead of ~8min
+uv run build_tiles.py --offline-names # no network for names: transliterate everything
 ```
 
 Requires [tippecanoe](https://github.com/felt/tippecanoe) on `PATH`
@@ -18,10 +20,16 @@ Outputs, all overwritten in place:
 | Path                           | Size    | Contents                                    |
 | ------------------------------ | ------- | ------------------------------------------- |
 | `static/tiles/railway.pmtiles` | ~4 MB   | 21,933 railway sections                     |
-| `static/tiles/station.pmtiles` | ~2 MB   | 9,046 stations, interchanges merged         |
+| `static/tiles/station.pmtiles` | ~3 MB   | 9,046 stations, interchanges merged         |
 | `static/tiles/bus.pmtiles`     | ~25 MB  | 353,453 routes dissolved to ~1,750 features |
-| `src/lib/data/operators.json`  | ~200 KB | Operator index for the highlight control    |
+| `static/tiles/busstop.pmtiles` | ~24 MB  | 278,515 bus stops, one per stop × operator  |
+| `src/lib/data/operators.json`  | ~250 KB | Operator index for the highlight control    |
 | `src/lib/data/datasets.json`   | ~1 KB   | Editions and sources for the About dialog   |
+| `data/name-en.generated.yaml`  | ~40 KB  | Line-name review aid — never a build input  |
+
+`--skip-bus` leaves `operators.json` untouched: the index is built from the
+feature counts of the run that writes it, so a railways-only run would drop the
+1,400 bus operators out of the map's filter while their routes are still on it.
 
 **The PMTiles are committed to the repository.** They change roughly once a year
 and rebuilding them needs a 320 MB download, so a checkout that can serve the map
@@ -38,7 +46,26 @@ table actually changes, and say why in the commit message.
   streams the XML with `iterparse`; at 280 MB expanded, building a DOM would need
   several gigabytes.
 
-Both are published by MLIT under CC BY 4.0.
+- **P11 bus stop data** — a ZIP of 47 prefectural ZIPs, each a GML shaped like
+  N07: the stop points are inline but referenced by id, so `p11_busstop.py`
+  streams them the same way. FY2022, the same edition as N07, which is why the
+  operator names in the two datasets match without extra aliasing.
+
+All three are published by MLIT under CC BY 4.0.
+
+## English names
+
+MLIT publishes none, so `english.py` resolves every English string, in this
+order: `data/name-en.yaml` (hand-curated), `name:en` from OpenStreetMap, English
+labels of railway lines from Wikidata, and finally Hepburn transliteration by
+pykakasi. Responses are cached under `.cache/names/` and re-used until
+`--refresh`; if a source is unreachable and uncached the build says so and falls
+back to transliteration rather than failing.
+
+`data/name-en.generated.yaml` lists every line name with the English we resolved
+and where it came from. It is a review aid in the mould of
+`ic-coverage.generated.yaml` — entries still marked `source: romaji` are the
+ones worth correcting into `data/name-en.yaml`.
 
 ## The acceptance table
 
@@ -96,8 +123,10 @@ Grey means "we don't know", never "your card will be rejected".
 | `build_tiles.py`         | Orchestrator and entry point                                 |
 | `ksj.py`                 | Downloads and unpacks the MLIT archives into `.cache/`       |
 | `coverage.py`            | Name normalization, joint-route splitting, status resolution |
+| `english.py`             | Japanese → English names, and where each one came from       |
 | `n02_railway.py`         | N02 GeoJSON → tagged railway and station GeoJSONL            |
 | `n07_bus.py`             | N07 GML → tagged, operator-dissolved bus GeoJSONL            |
+| `p11_busstop.py`         | P11 GML → tagged bus stop GeoJSONL                           |
 | `seed_from_wikipedia.py` | Seeding and review aid, not part of the build                |
 
 ## Tile attributes
@@ -106,13 +135,17 @@ Short keys, because they ride in every tile and the map style reads them by name
 `src/lib/map/status.ts` and `src/lib/map/operators.ts` are the other half of this
 contract.
 
-| Key  | Meaning                                                             |
-| ---- | ------------------------------------------------------------------- |
-| `st` | Acceptance: `0` none, `1` full, `2` partial, `3` unknown            |
-| `op` | Operator ids, packed as `\|a\|b\|` — see `Coverage.operator_key`    |
-| `nm` | Operator name as MLIT writes it (station name on the station layer) |
-| `cp` | Operator name — station layer only, where `nm` is taken             |
-| `ln` | Line name (railway and station layers)                              |
-| `ar` | IC card area id: `suica`, `icoca`, …                                |
-| `kd` | N02 railway class code                                              |
-| `it` | N02 institution type code                                           |
+| Key  | Meaning                                                           |
+| ---- | ----------------------------------------------------------------- |
+| `st` | Acceptance: `0` none, `1` full, `2` partial, `3` unknown          |
+| `op` | Operator ids, packed as `\|a\|b\|` — see `Coverage.operator_key`  |
+| `nm` | Operator name as MLIT writes it (place name on station / busstop) |
+| `ne` | English `nm` — station and busstop layers                         |
+| `cp` | Operator name — station and busstop layers, where `nm` is taken   |
+| `ln` | Line name (railway and station layers)                            |
+| `le` | English `ln` — railway and station layers                         |
+| `rt` | Route names through a bus stop, `、`-joined, first six only       |
+| `rn` | How many further routes `rt` left out                             |
+| `ar` | IC card area id: `suica`, `icoca`, …                              |
+| `kd` | N02 railway class code                                            |
+| `it` | N02 institution type code                                         |

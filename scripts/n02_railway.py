@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Iterator
 
 from coverage import STATUS_CODE, Coverage
+from english import NameBook
 
 
 def _geojson(root: Path, name: str) -> Path:
@@ -46,7 +47,7 @@ def _write(path: Path, features: Iterator[dict]) -> int:
     return count
 
 
-def build_sections(root: Path, coverage: Coverage, destination: Path) -> int:
+def build_sections(root: Path, coverage: Coverage, names: NameBook, destination: Path) -> int:
     """Write railway sections with an `st` acceptance code attached."""
 
     def features() -> Iterator[dict]:
@@ -68,6 +69,7 @@ def build_sections(root: Path, coverage: Coverage, destination: Path) -> int:
                     "op": coverage.operator_key(operators),
                     "nm": company or "",
                     "ln": line or "",
+                    "le": names.line(line or "")[0],
                     "ar": next((o.area for o in operators if o.area), "") or "",
                     "kd": props.get("N02_001") or "",
                     "it": props.get("N02_002") or "",
@@ -78,7 +80,7 @@ def build_sections(root: Path, coverage: Coverage, destination: Path) -> int:
     return _write(destination, features())
 
 
-def build_stations(root: Path, coverage: Coverage, destination: Path) -> int:
+def build_stations(root: Path, coverage: Coverage, names: NameBook, destination: Path) -> int:
     """Write stations with the same acceptance code as their line."""
 
     def features() -> Iterator[dict]:
@@ -94,14 +96,19 @@ def build_stations(root: Path, coverage: Coverage, destination: Path) -> int:
                 coords = geometry["coordinates"]
                 geometry = {"type": "Point", "coordinates": coords[len(coords) // 2]}
 
+            name = props.get("N02_005") or ""
+            longitude, latitude = geometry["coordinates"][0], geometry["coordinates"][1]
+
             yield {
                 "type": "Feature",
                 "properties": {
                     "st": STATUS_CODE[status],
                     "op": coverage.operator_key(operators),
-                    "nm": props.get("N02_005") or "",
+                    "nm": name,
+                    "ne": names.station(name, longitude, latitude)[0],
                     "cp": company or "",
                     "ln": line or "",
+                    "le": names.line(line or "")[0],
                     "ar": next((o.area for o in operators if o.area), "") or "",
                     # Stations 300 m apart sharing a name are one interchange.
                     # `unique()` below keeps one per group and this key is

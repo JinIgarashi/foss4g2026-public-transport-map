@@ -51,7 +51,8 @@ const en = {
 		title: 'Layers',
 		railway: 'Railways',
 		bus: 'Bus routes',
-		station: 'Stations',
+		station: 'Railway stations',
+		busstop: 'Bus stops',
 		filterTitle: 'Show status',
 		collapse: 'Hide panel',
 		expand: 'Show layers and filters'
@@ -61,6 +62,8 @@ const en = {
 		title: 'IC card acceptance',
 		railwayLine: 'Railway',
 		busLine: 'Bus route',
+		railwayStation: 'Railway station',
+		busStop: 'Bus stop',
 		collapse: 'Hide legend',
 		expand: 'Show legend'
 	},
@@ -68,11 +71,15 @@ const en = {
 	popup: {
 		line: 'Line',
 		mode: 'Type',
+		operator: 'Operator',
 		operatorType: 'Operator type',
 		cardArea: 'IC card area',
+		routes: 'Routes',
+		moreRoutes: (count: number) => `and ${count} more`,
 		station: 'Station',
 		railway: 'Railway',
-		bus: 'Bus route'
+		bus: 'Bus route',
+		busStop: 'Bus stop'
 	},
 
 	operatorFilter: {
@@ -135,6 +142,9 @@ const en = {
 		icSourceBody:
 			'Compiled by hand from the list of participating operators in the Japanese Wikipedia article on the nationwide mutual-use service, cross-checked against the operator lists published by JR East and JR West.',
 		basemap: 'Basemap',
+		names: 'English names',
+		namesBody:
+			'MLIT publishes no English names at all, so station, bus stop, line and operator names in English come from the `name:en` tags of OpenStreetMap and from Wikidata where they exist. Everything else is transliterated automatically, which gets the reading of a place name wrong now and then — the Japanese name is always shown alongside.',
 		disclaimer: 'Please read',
 		disclaimerBody:
 			'This is a hobby project, not an official service. IC card coverage changes, the bus dataset is from 2022, and the acceptance table is our own compilation. Use it to plan, but confirm with the operator before you rely on it at a ticket gate.',
@@ -147,7 +157,8 @@ const en = {
 
 	map: {
 		loading: 'Loading map…',
-		attribution: 'MLIT National Land Numerical Information (Railway N02 / Bus routes N07)'
+		attribution:
+			'MLIT National Land Numerical Information (Railway N02 / Bus routes N07 / Bus stops P11)'
 	}
 };
 

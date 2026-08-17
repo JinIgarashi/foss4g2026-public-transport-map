@@ -23,6 +23,18 @@
 				"ja": "2022年度（令和4年度）版・国土交通省が公開している最新版"
 			},
 			"url": "https://nlftp.mlit.go.jp/ksj/gml/data/N07/N07-22/N07-22_GML.zip"
+		},
+		{
+			"id": "P11",
+			"label": {
+				"en": "Bus stop data (P11)",
+				"ja": "バス停留所データ（P11）"
+			},
+			"edition": {
+				"en": "FY2022 edition — the most recent MLIT publishes",
+				"ja": "2022年度（令和4年度）版・国土交通省が公開している最新版"
+			},
+			"url": "https://nlftp.mlit.go.jp/ksj/gml/data/P11/P11-22/P11-22_GML.zip"
 		}
 	],
 	"icSourceDate": "2026-04-01",

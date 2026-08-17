@@ -71,7 +71,21 @@ N07 = Dataset(
     edition_ja="2022年度（令和4年度）版・国土交通省が公開している最新版",
 )
 
-DATASETS = {dataset.key: dataset for dataset in (N02, N07)}
+#: Bus stops. The national archive is a ZIP of 47 prefectural ZIPs, each holding
+#: one GML — `ensure()` unpacks the inner ones too, so callers see 47 files in a
+#: single directory. Same FY2022 edition as N07, and MLIT spells the operator
+#: names the same way in both, so `coverage.py` matches them without extra work.
+P11 = Dataset(
+    key="P11",
+    url="https://nlftp.mlit.go.jp/ksj/gml/data/P11/P11-22/P11-22_GML.zip",
+    root="P11-22_GML",
+    label_en="Bus stop data (P11)",
+    label_ja="バス停留所データ（P11）",
+    edition_en="FY2022 edition — the most recent MLIT publishes",
+    edition_ja="2022年度（令和4年度）版・国土交通省が公開している最新版",
+)
+
+DATASETS = {dataset.key: dataset for dataset in (N02, N07, P11)}
 
 
 def _download(url: str, destination: Path) -> None:
@@ -86,6 +100,21 @@ def _download(url: str, destination: Path) -> None:
     ):
         shutil.copyfileobj(response, out)
     partial.replace(destination)
+
+
+def _extract_nested(extracted: Path, root: Path) -> None:
+    """Unpack a ZIP of ZIPs, as P11 ships: 47 prefectural archives side by side.
+
+    Does nothing for the datasets that expand straight into `root`, so `ensure()`
+    can call it unconditionally.
+    """
+    nested = sorted(extracted.glob("*.zip"))
+    if not nested:
+        return
+    print(f"  extracting {len(nested)} nested archives")
+    for archive in nested:
+        with zipfile.ZipFile(archive) as zf:
+            zf.extractall(root)
 
 
 def ensure(dataset: Dataset, *, refresh: bool = False) -> Path:
@@ -107,6 +136,7 @@ def ensure(dataset: Dataset, *, refresh: bool = False) -> Path:
         print(f"  extracting {archive.name}")
         with zipfile.ZipFile(archive) as zf:
             zf.extractall(extracted)
+        _extract_nested(extracted, root)
 
     if not root.is_dir():
         raise FileNotFoundError(

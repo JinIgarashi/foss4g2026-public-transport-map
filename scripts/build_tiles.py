@@ -23,9 +23,11 @@ import tempfile
 from pathlib import Path
 
 import coverage as coverage_module
+import english
 import ksj
 import n02_railway
 import n07_bus
+import p11_busstop
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPTS_DIR.parent
@@ -64,11 +66,16 @@ def human(path: Path) -> str:
     return ""
 
 
-def write_operator_index(cov: coverage_module.Coverage) -> Path:
+def write_operator_index(cov: coverage_module.Coverage, names: english.NameBook) -> Path:
     """The table the operator filter searches and the popup reads names from.
 
     Only operators the tiles actually reference are included — the participant
     list names ferries and taxi companies that never appear in N02/N07.
+
+    Operators outside the IC participant list have no curated English name, and
+    that is most of the bus network, so they get a transliterated one here. It
+    is marked `enAuto` — the popup shows it either way, but the flag is what
+    lets a later pass find every name still waiting to be checked by a human.
     """
     entries = []
     for operator in cov.operators.values():
@@ -86,6 +93,12 @@ def write_operator_index(cov: coverage_module.Coverage) -> Path:
         }
         if operator.name_en:
             entry["en"] = operator.name_en
+        else:
+            english_name, source = names.operator(operator.name_ja)
+            if english_name:
+                entry["en"] = english_name
+                if source != "manual":
+                    entry["enAuto"] = True
         if operator.area:
             entry["area"] = operator.area
         if operator.note_en or operator.note_ja:
@@ -118,6 +131,7 @@ def write_dataset_metadata() -> Path:
     `bus.pmtiles` is still there and still being served.
     """
     include_bus = (TILES_DIR / "bus.pmtiles").exists()
+    include_stops = (TILES_DIR / "busstop.pmtiles").exists()
     datasets = [
         {
             "id": dataset.key,
@@ -125,7 +139,11 @@ def write_dataset_metadata() -> Path:
             "edition": {"en": dataset.edition_en, "ja": dataset.edition_ja},
             "url": dataset.url,
         }
-        for dataset in (ksj.N02, *((ksj.N07,) if include_bus else ()))
+        for dataset in (
+            ksj.N02,
+            *((ksj.N07,) if include_bus else ()),
+            *((ksj.P11,) if include_stops else ()),
+        )
     ]
     coverage_meta = coverage_module.load().meta
     path = APP_DATA_DIR / "datasets.json"
@@ -171,6 +189,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--refresh", action="store_true", help="re-download the MLIT archives")
     parser.add_argument("--skip-bus", action="store_true", help="skip the slow bus dataset")
+    parser.add_argument(
+        "--offline-names",
+        action="store_true",
+        help="skip OSM and Wikidata; transliterate every English name",
+    )
     args = parser.parse_args()
 
     if shutil.which("tippecanoe") is None:
@@ -179,6 +202,9 @@ def main() -> None:
     print("Loading the IC coverage table…")
     cov = coverage_module.load()
     print(f"  {len(cov.operators)} curated operators, {len(cov.areas)} card areas")
+
+    print("\nLoading English names…")
+    names = english.load(refresh=args.refresh, offline=args.offline_names)
 
     counts: dict[str, dict[int, int]] = {}
     TILES_DIR.mkdir(parents=True, exist_ok=True)
@@ -190,13 +216,13 @@ def main() -> None:
         n02_root = ksj.ensure(ksj.N02, refresh=args.refresh)
 
         sections = work / "railway.geojsonl"
-        total = n02_railway.build_sections(n02_root, cov, sections)
+        total = n02_railway.build_sections(n02_root, cov, names, sections)
         print(f"    {total:,} sections")
         counts["railway"] = _histogram(sections)
         run_tippecanoe(sections, TILES_DIR / "railway.pmtiles", "railway", LINE_FLAGS)
 
         stations = work / "station.geojsonl"
-        total = n02_railway.build_stations(n02_root, cov, stations)
+        total = n02_railway.build_stations(n02_root, cov, names, stations)
         print(f"    {total:,} stations (interchanges merged)")
         counts["station"] = _histogram(stations)
         run_tippecanoe(
@@ -218,13 +244,43 @@ def main() -> None:
             counts["bus"] = _histogram(routes)
             run_tippecanoe(routes, TILES_DIR / "bus.pmtiles", "bus", LINE_FLAGS)
 
-    index = write_operator_index(cov)
-    metadata = write_dataset_metadata()
+            print("\nBus stops (P11)…")
+            p11_root = ksj.ensure(ksj.P11, refresh=args.refresh)
+            stops = work / "busstop.geojsonl"
+            total = p11_busstop.build_stops(p11_root, cov, names, stops)
+            print(f"    {total:,} stops")
+            counts["busstop"] = _histogram(stops)
+            run_tippecanoe(
+                stops,
+                TILES_DIR / "busstop.pmtiles",
+                "busstop",
+                # The map shows stops from z13 and MapLibre overzooms happily, so
+                # z13 is both the first zoom worth carrying and the last worth
+                # storing: a z13 tile still resolves to about a metre, and going
+                # to z14 doubles the archive to 50 MB for no visible gain.
+                # `-r1` again: at the zooms where stops are drawn, a thinned-out
+                # stop is a stop the visitor cannot find.
+                ["-Z12", "-z13", "-r1", "--drop-densest-as-needed", "--force"],
+            )
+
+    # The index is built from the feature counts this run measured, so a run
+    # that skipped the bus datasets would rewrite it with the 1,400 bus
+    # operators missing — and the map would lose them from the filter while
+    # `bus.pmtiles` still shows their routes. Leave the committed file alone.
+    extra: list[Path] = []
+    if args.skip_bus:
+        print("\n--skip-bus: leaving operators.json as it is (no bus counts this run)")
+    else:
+        extra.append(write_operator_index(cov, names))
+
+    extra.append(write_dataset_metadata())
+    extra.append(names.write_line_review())
 
     report(cov, counts)
+    names.report()
 
     print("\nOutputs:")
-    for path in sorted(TILES_DIR.glob("*.pmtiles")) + [index, metadata]:
+    for path in sorted(TILES_DIR.glob("*.pmtiles")) + extra:
         print(f"  {human(path):>8}  {path.relative_to(PROJECT_DIR)}")
 
 

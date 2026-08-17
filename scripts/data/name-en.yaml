@@ -1,0 +1,140 @@
+# Hand-curated English names, the highest-priority source in `english.py`.
+#
+# Everything here overrides OpenStreetMap, Wikidata and the romaji fallback.
+# Keys are the Japanese name exactly as MLIT writes it in N02 / P11 — if a name
+# does not take effect, check it against the raw dataset rather than against a
+# timetable, because MLIT's spelling is what the resolver sees.
+#
+# `data/name-en.generated.yaml` lists every line name with the English we
+# resolved and where it came from. Entries still marked `source: romaji` are
+# the ones worth correcting here.
+#
+# IC-participating operators already carry `name.en` in `ic-coverage.yaml`;
+# only add an operator here when it has no entry there.
+
+meta:
+  description: Manual English names for stations, bus stops, railway lines and operators.
+
+stations: {}
+
+bus_stops: {}
+
+# Reviewed against `name-en.generated.yaml`. Only lines whose automatic name was
+# actually wrong are listed — a transliteration that already matches the signs
+# (`Kabe Line`, `Chiba Line`) is left to the resolver so this file stays a list
+# of corrections rather than a copy of the dataset.
+lines:
+  # Municipal subways: MLIT files them under their legal route number, which is
+  # not what anyone calls them or what the station signs say.
+  1号線東山線: Higashiyama Line
+  2号線名城線: Meijo Line
+  4号線名城線: Meijo Line
+  2号線名港線: Meiko Line
+  3号線鶴舞線: Tsurumai Line
+  6号線桜通線: Sakura-dori Line
+  1号線浅草線: Asakusa Line
+  6号線三田線: Mita Line
+  10号線新宿線: Shinjuku Line
+  12号線大江戸線: Oedo Line
+  3号線銀座線: Ginza Line
+  4号線丸ノ内線: Marunouchi Line
+  4号線丸ノ内線分岐線: Marunouchi Branch Line
+  2号線日比谷線: Hibiya Line
+  5号線東西線: Tozai Line
+  8号線有楽町線: Yurakucho Line
+  9号線千代田線: Chiyoda Line
+  7号線南北線: Namboku Line
+  11号線半蔵門線: Hanzomon Line
+  13号線副都心線: Fukutoshin Line
+  1号線(御堂筋線): Midosuji Line
+  2号線(谷町線): Tanimachi Line
+  3号線(四つ橋線): Yotsubashi Line
+  4号線(中央線): Chuo Line
+  5号線(千日前線): Sennichimae Line
+  6号線(堺筋線): Sakaisuji Line
+  7号線(長堀鶴見緑地線): Nagahori Tsurumi-ryokuchi Line
+  8号線(今里筋線): Imazatosuji Line
+  1号線(空港線): Airport Line
+  2号線(箱崎線): Hakozaki Line
+  3号線(七隈線): Nanakuma Line
+  1条線: Ichijo Line
+
+  # Loanwords, which transliterate back into Japanese-sounding nonsense.
+  ケーブルカー: Cable Car
+  ポートアイランド線: Port Island Line
+  リアス線: Rias Line
+  大阪モノレール線: Osaka Monorail Line
+  摩耶ケーブル線: Maya Cable Line
+  帆柱ケーブル線: Hobashira Cable Line
+  ユーカリが丘線: Yukarigaoka Line
+  こどもの国線: Kodomonokuni Line
+  えちぜん鉄道: Echizen Railway
+  岳南鉄道線: Gakunan Railway Line
+  鋼索線: Cable Line
+  大山鋼索線: Oyama Cable Line
+  生駒鋼索線: Ikoma Cable Line
+  西信貴鋼索線: Nishi-Shigi Cable Line
+  高尾鋼索線: Takao Cable Line
+
+  # Readings pykakasi gets wrong — mostly place names with an irregular reading.
+  上信線: Joshin Line
+  上毛線: Jomo Line
+  上滝線: Kamidaki Line
+  上熊本線: Kami-Kumamoto Line
+  中之島線: Nakanoshima Line
+  千原線: Chihara Line
+  多奈川線: Tanagawa Line
+  多摩湖線: Tamako Line
+  大井町線: Oimachi Line
+  大雄山線: Daiyuzan Line
+  安野屋線: Yasunoya Line
+  小倉線: Kokura Line
+  弘南線: Konan Line
+  拝島線: Haijima Line
+  江ノ島線: Enoshima Line
+  浅野川線: Asanogawa Line
+  湯の山線: Yunoyama Line
+  湯の川線: Yunokawa Line
+  白島線: Hakushima Line
+  羽島線: Hashima Line
+  横川線: Yokogawa Line
+  江波線: Eba Line
+  本町線: Honmachi Line
+  清輝橋線: Seikibashi Line
+  田崎線: Tasaki Line
+  田原本線: Tawaramoto Line
+  網干線: Aboshi Line
+  西名古屋港線: Nishi-Nagoyako Line
+  西神線: Seishin Line
+  西神延伸線: Seishin Extension Line
+  神戸高速線: Kobe Rapid Transit Line
+  高山線: Takayama Line
+  高師浜線: Takashinohama Line
+  高野線: Koya Line
+  鹿児島線: Kagoshima Line
+  越美南線: Etsumi-Nan Line
+  阿佐東線: Asato Line
+  金町線: Kanamachi Line
+  泉北線: Semboku Line
+  北神線: Hokushin Line
+  箕面線: Minoo Line
+  難波線: Namba Line
+  豊島線: Toshima Line
+  豊田線: Toyota Line
+  御所線: Gose Line
+  赤迫支線: Akasako Branch Line
+  成田空港線: Narita Airport Line
+  知多新線: Chita New Line
+  常磐新線: Tsukuba Express
+  東京臨海新交通臨海線: Yurikamome Line
+  宝来・谷地頭線: Horai-cho / Yachigashira Line
+  富山駅南北接続線: Toyama Station North-South Connecting Line
+
+  # Generic names, which read as a description rather than a transliteration.
+  支線: Branch Line
+  連絡線: Connecting Line
+  近鉄連絡線: Kintetsu Connecting Line
+  鉄道線: Railway Line
+  幹線: Main Line
+
+operators: {}

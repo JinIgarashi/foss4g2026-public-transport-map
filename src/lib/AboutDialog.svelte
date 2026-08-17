@@ -107,6 +107,25 @@
 					</dd>
 				</div>
 				<div>
+					<dt class="font-medium">{t.about.names}</dt>
+					<dd class="text-muted-foreground">{t.about.namesBody}</dd>
+					<dd class="mt-1">
+						<a
+							href="https://www.openstreetmap.org/copyright"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-xs underline underline-offset-2">OpenStreetMap (ODbL)</a
+						>
+						&middot;
+						<a
+							href="https://www.wikidata.org/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-xs underline underline-offset-2">Wikidata (CC0)</a
+						>
+					</dd>
+				</div>
+				<div>
 					<dt class="font-medium">{t.about.basemap}</dt>
 					<dd class="text-muted-foreground">
 						<a
