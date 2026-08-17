@@ -21,7 +21,12 @@ jobs:
         with:
           node-version: 24
       - run: pnpm install --frozen-lockfile
+      # `svelte-kit sync` types `$env/static/public` from the variables that are
+      # actually set, so without the key here the generated module has no
+      # `PUBLIC_PROTOMAP_KEY` and every import of it fails to typecheck.
       - run: pnpm check
+        env:
+          PUBLIC_PROTOMAP_KEY: ${{ secrets.PUBLIC_PROTOMAP_KEY }}
       - run: pnpm lint
       # The PMTiles are committed, so the tile pipeline does not run here — see
       # scripts/README.md.
