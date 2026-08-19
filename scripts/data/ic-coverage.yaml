@@ -877,6 +877,7 @@ operators:
     status: full
   - id: jp-1bd006662d
     name:
+      en: Toyotetsu Bus
       ja: 豊鉄バス
     area: manaca
     modes:
