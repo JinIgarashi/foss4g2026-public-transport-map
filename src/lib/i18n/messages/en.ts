@@ -60,18 +60,6 @@ const en = {
 		expand: 'Show layers and filters'
 	},
 
-	legend: {
-		title: 'IC card acceptance',
-		shinkansenLine: 'Shinkansen',
-		railwayLine: 'Railway',
-		tramLine: 'Tram or monorail',
-		busLine: 'Bus route',
-		railwayStation: 'Railway station',
-		busStop: 'Bus stop',
-		collapse: 'Hide legend',
-		expand: 'Show legend'
-	},
-
 	popup: {
 		line: 'Line',
 		mode: 'Type',

@@ -8,14 +8,15 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { Switch } from '$lib/components/ui/switch/index.js';
 	import { currentMessages } from '$lib/i18n';
+	import LayerSymbol from './LayerSymbol.svelte';
 	import OperatorFilter from './OperatorFilter.svelte';
 	import { STATUS_COLOR, STATUS_KEYS } from './status';
 	import { mapView, type LayerKey } from './view.svelte';
 
 	let t = $derived(currentMessages());
 
-	// Collapsed by default on phones: the panel is taller than a phone map is
-	// useful, and the legend already explains the colours.
+	// The one panel on the map: the toggles double as the legend, each row
+	// carrying the symbol the map draws that layer with.
 	let expanded = $state(true);
 
 	const layers: LayerKey[] = ['shinkansen', 'railway', 'tram', 'bus', 'station', 'busstop'];
@@ -44,7 +45,15 @@
 			<div class="flex flex-col gap-2">
 				{#each layers as layer (layer)}
 					<div class="flex items-center justify-between gap-2">
-						<Label for={`layer-${layer}`} class="text-sm font-normal">{t.layers[layer]}</Label>
+						<!-- `flex-1`: the label owns the gap up to the switch, so the
+						     whole row is a hit target rather than just the words. -->
+						<Label
+							for={`layer-${layer}`}
+							class="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-sm font-normal"
+						>
+							<LayerSymbol {layer} />
+							<span>{t.layers[layer]}</span>
+						</Label>
 						<Switch
 							id={`layer-${layer}`}
 							checked={mapView.isVisible(layer)}

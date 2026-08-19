@@ -42,7 +42,6 @@
 	import BasemapSwitcher from './BasemapSwitcher.svelte';
 	import FeaturePopup, { type FeatureInfo } from './FeaturePopup.svelte';
 	import LayerControl from './LayerControl.svelte';
-	import Legend from './Legend.svelte';
 
 	/** Hiroshima city centre — the conference is here, so the map opens here. */
 	const HIROSHIMA: [number, number] = [132.4553, 34.3853];
@@ -85,18 +84,25 @@
 
 	/**
 	 * Stations are drawn a size and a half larger than bus stops: they are what
-	 * a visitor navigates by, they come in at z9 where the map is still coarse,
-	 * and at the old size they were easy to lose against the line they sit on.
-	 * The legend follows the same size relation.
+	 * a visitor navigates by, and at a smaller size they were easy to lose
+	 * against the line they sit on. The layer panel's symbols follow the same
+	 * size relation.
+	 *
+	 * That full size only starts at z13, the zoom a station is a place to walk
+	 * to rather than a dot on a regional overview. Below it the dots stay small:
+	 * from z9, where the layer comes in, up to a prefecture-wide view they are
+	 * dense enough that the full size merges them into a chain.
 	 */
 	const STATION_RADIUS: DataDrivenPropertyValueSpecification<number> = [
 		'interpolate',
 		['linear'],
 		['zoom'],
 		9,
-		3.5,
+		2,
 		12,
-		5.5,
+		3,
+		13,
+		6.2,
 		15,
 		7.5
 	];
@@ -310,7 +316,7 @@
 
 	<!-- MapLibre *prepends* into the bottom corners, so the reading order down the
 	     screen is the reverse of the order here: bottom-right ends up geolocate,
-	     zoom, attribution, and bottom-left legend, basemap picker, scale.
+	     zoom, attribution, and bottom-left basemap picker, scale.
 
 	     Keyed on the locale because the attribution text is localised, and
 	     `AttributionControl` answers a changed `customAttribution` by removing and
@@ -335,7 +341,6 @@
 
 	<ScaleControl position="bottom-left" maxWidth={120} unit="metric" />
 	<BasemapSwitcher />
-	<Legend />
 
 	<!-- Buses first so railways draw over them: a rail line is the thing a
 	     visitor is most likely to be looking for, and bus routes are dense
@@ -627,7 +632,7 @@
 		<CircleLayer
 			id="station-dot"
 			sourceLayer="station"
-			minzoom={9}
+			minzoom={10}
 			filter={mapView.filter}
 			layout={{ visibility: stationVisibility }}
 			paint={{

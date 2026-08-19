@@ -60,18 +60,6 @@ const ja: Messages = {
 		expand: 'レイヤーと絞り込みを表示'
 	},
 
-	legend: {
-		title: 'ICカードの対応状況',
-		shinkansenLine: '新幹線',
-		railwayLine: '鉄道',
-		tramLine: '路面電車・モノレール',
-		busLine: 'バスルート',
-		railwayStation: '鉄道駅',
-		busStop: 'バス停',
-		collapse: '凡例を隠す',
-		expand: '凡例を表示'
-	},
-
 	popup: {
 		line: '路線',
 		mode: '種別',
